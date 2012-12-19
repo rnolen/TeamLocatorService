@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="TeamLocatorEar-1.0-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="TeamLocatorService-1.0-SNAPSHOT.jar" deploy-path="/" handle="module:/resource/TeamLocatorService/TeamLocatorService">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="eclipselink-2.3.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/eclipse/persistence/eclipselink/2.3.2/eclipselink-2.3.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="junit-4.8.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/junit/junit/4.8.2/junit-4.8.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="javax.persistence-2.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/eclipse/persistence/javax.persistence/2.0.0/javax.persistence-2.0.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="derby-10.9.1.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="TeamLocatorServiceClient-1.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/TeamLocatorServiceClient/TeamLocatorServiceClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="TeamLocatorWeb-1.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/TeamLocatorWeb/TeamLocatorWeb">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
