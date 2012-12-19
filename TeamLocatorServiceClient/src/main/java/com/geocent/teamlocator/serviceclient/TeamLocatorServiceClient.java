@@ -49,16 +49,16 @@ public class TeamLocatorServiceClient implements TeamLocatorService
         return null;
     }
 
-//    @Override
-//    public List<TeamDto> getTeamByName( String name ) {
-//        List<TeamDto> result = null;
-//        try {
-//            result = getService().getTeamByName( name );
-//        } catch( ServiceNotFoundException ex ) {
-//            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
-//        }
-//        return result;
-//    }
+    @Override
+    public List<TeamDto> getTeamByName( String name ) {
+        List<TeamDto> result = null;
+        try {
+            result = getService().getTeamByName( name );
+        } catch( ServiceNotFoundException ex ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+        return result;
+    }
 
     /* (non-Javadoc)
      * @see com.geocent.teamlocator.service.TeamLocatorService#removeTeam(com.geocent.teamlocator.dto.TeamDto, com.geocent.teamlocator.dto.MissionDto)

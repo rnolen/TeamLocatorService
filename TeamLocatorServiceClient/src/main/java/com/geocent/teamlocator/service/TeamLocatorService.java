@@ -36,7 +36,7 @@ public interface TeamLocatorService
      * @param name
      * @return List of TeamDto objects
      */
-//    public List<TeamDto> getTeamByName( String name );
+    public List<TeamDto> getTeamByName( String name );
     
     /**
      * Removes the passed Team from its Mission

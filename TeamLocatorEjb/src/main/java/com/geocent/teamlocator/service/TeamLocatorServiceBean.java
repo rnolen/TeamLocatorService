@@ -22,8 +22,8 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     
     @EJB 
     protected MissionEao missionEao; 
-//    @EJB
-//    protected TeamEao teamEao;
+    @EJB
+    protected TeamEao teamEao;
 
     /**
      * Default constructor. 
@@ -59,11 +59,11 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
 	/**
      * @see TeamLocatorService#getTeamByName(String)
      */
-//    public List<TeamDto> getTeamByName( String name ) {
-//        System.out.println( "---->TRACE: TeamLocatorService.getTeamByName" );
-//        List<TeamDto> result = teamEao.getTeamByName( name );
-//        return result;
-//    }
+    public List<TeamDto> getTeamByName( String name ) {
+        System.out.println( "---->TRACE: TeamLocatorService.getTeamByName" );
+        List<TeamDto> result = teamEao.getTeamByName( name );
+        return result;
+    }
 
 	/**
      * @see TeamLocatorService#addMemberLocation(Integer, LocationDto)

@@ -17,8 +17,8 @@ import javax.persistence.Query;
  *
  * @author rnolen
  */
-//@Stateless
-//@LocalBean
+@Stateless
+@LocalBean
 public class TeamEaoImpl extends AbstractEao implements TeamEao {
 
     
