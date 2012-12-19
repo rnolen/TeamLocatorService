@@ -1,0 +1,9 @@
+TeamLocatorEjb/.classpath
+TeamLocatorServiceClient/.classpath
+TeamLocatorWeb/.classpath
+TeamLocatorWeb/.settings/.jsdtscope
+.project
+TeamLocatorEar/.project
+TeamLocatorEjb/.project
+TeamLocatorServiceClient/.project
+TeamLocatorWeb/.project
