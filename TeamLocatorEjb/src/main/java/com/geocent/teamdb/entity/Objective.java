@@ -24,8 +24,8 @@ public class Objective extends com.geocent.util.jpa.Entity implements Serializab
 	private double longitude;
 
 	//bi-directional many-to-one association to Mission
-	@OneToMany(mappedBy="objective")
-	private List<Mission> missions;
+//	@OneToMany(mappedBy="objective")
+//	private List<Mission> missions;
 
 	public Objective() {
 	}
@@ -62,12 +62,12 @@ public class Objective extends com.geocent.util.jpa.Entity implements Serializab
 		this.longitude = longitude;
 	}
 
-	public List<Mission> getMissions() {
-		return this.missions;
-	}
-
-	public void setMissions(List<Mission> missions) {
-		this.missions = missions;
-	}
+//	public List<Mission> getMissions() {
+//		return this.missions;
+//	}
+//
+//	public void setMissions(List<Mission> missions) {
+//		this.missions = missions;
+//	}
 
 }

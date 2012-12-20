@@ -31,7 +31,8 @@ public class Mission extends com.geocent.util.jpa.Entity implements Serializable
 	private List<Location> locations;
 
 	//bi-directional many-to-one association to Objective
-	@ManyToOne
+//	@ManyToOne
+	@OneToOne( cascade=CascadeType.ALL )
 	private Objective objective;
 
 	//bi-directional many-to-one association to MissionTeam
