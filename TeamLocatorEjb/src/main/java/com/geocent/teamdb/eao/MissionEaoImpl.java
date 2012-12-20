@@ -6,6 +6,7 @@ import com.geocent.teamdb.util.Converter;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
+import com.geocent.teamlocator.exception.InvalidMissionException;
 
 import java.util.Date;
 import java.util.List;
@@ -53,9 +54,15 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
 	/**
      * @see MissionEao#addMission(Mission)
      */
-    public int addMission(MissionDto mission) {
-        // TODO Auto-generated method stub
-			return 0;
+    public MissionDto addMission(MissionDto missionDto) throws InvalidMissionException {
+        MissionDto result = null;
+        if( missionDto == null ) {
+            throw new InvalidMissionException( "Invalid MissionDto passed to addMission" );
+        }
+        Mission mission = converter.toEntity( missionDto );
+        mission = persist( mission );
+        result = converter.fromEntity( mission );
+        return result;
     }
 
 	/**

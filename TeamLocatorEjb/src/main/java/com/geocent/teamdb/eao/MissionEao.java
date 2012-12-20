@@ -10,6 +10,7 @@ import com.geocent.teamdb.entity.Team;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
+import com.geocent.teamlocator.exception.InvalidMissionException;
 
 @Remote
 public interface MissionEao extends Eao
@@ -46,9 +47,10 @@ public interface MissionEao extends Eao
     /**
      * Add the passed mission to the database
      * @param mission
-     * @return key to the added mission
+     * @return Updated Mission
+     * @throws InvalidMissionException
      */
-    int addMission( MissionDto mission );
+    MissionDto addMission( MissionDto mission ) throws InvalidMissionException;
     
     /**
      * Update the passed mission in the database
