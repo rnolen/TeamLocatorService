@@ -48,7 +48,24 @@ public abstract class AbstractEao implements Eao
         }
         return entity;
     }
+    
+    /* (non-Javadoc)
+     * @see com.geocent.teamdb.eao.Eao#delete(com.geocent.util.jpa.Entity)
+     */
+    public <T extends Entity> void delete( T entity ) throws EntityNotFoundException {
+        // Need to re-retrieve the entity we're going to delete so that it's 'managed'
+        if( entity.hasId() ) {
+            Entity work = get( entity.getClass(), entity.getId() );
+            if( work != null ) {
+                em.remove( work );
+            }
+        } else { 
+            throw new EntityNotFoundException( entity.getClass(), entity.getId() );
+        }
+    }
+    
 
+    
     /* (non-Javadoc)
      * @see com.geocent.teamdb.eao.Eao#flush()
      */

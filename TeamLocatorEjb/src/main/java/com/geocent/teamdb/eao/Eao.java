@@ -22,6 +22,13 @@ public interface Eao
     public <T extends Entity> T persist( T entity );
 
     /**
+     * Delete the passed entity from the database
+     * @param entity
+     * @throws EntityNotFoundException
+     */
+    public <T extends Entity> void delete( T entity ) throws EntityNotFoundException;
+    
+    /**
      * Allows the holder of an Entity to ask the EntityManager to do a flush
      */
     public void flush();
