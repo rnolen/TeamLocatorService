@@ -18,8 +18,9 @@ public interface TeamLocatorService
      * Adds the input Mission to the database along with included Objective
      * @param mission
      * @return updated MissionDto
+     * @throws InvalidMissionException if the Mission has no Objective
      */
-    public MissionDto addMission( MissionDto mission );
+    public MissionDto addMission( MissionDto mission ) throws InvalidMissionException;
 
     /**
      * Adds the passed Team to the database and adds it to the input Mission

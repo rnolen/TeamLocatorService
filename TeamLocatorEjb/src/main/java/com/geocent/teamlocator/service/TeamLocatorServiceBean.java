@@ -6,18 +6,21 @@ import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.exception.InvalidMissionException;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.jws.WebService;
 
 /**
  * Session Bean implementation class TeamLocatorServiceBean
  */
 @Stateless
 @LocalBean
+@WebService
 public class TeamLocatorServiceBean implements TeamLocatorService {
     
     @EJB 
@@ -99,9 +102,13 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
 	/**
      * @see TeamLocatorService#addMission(MissionDto)
      */
-    public MissionDto addMission(MissionDto mission) {
-        // TODO Auto-generated method stub
-			return null;
+    public MissionDto addMission(MissionDto mission) throws InvalidMissionException {
+        MissionDto result;
+        if( mission.getObjective() == null ) {
+            throw new InvalidMissionException( "Mission MUST contain an Objective" );
+        }
+        result = missionEao.addMission( mission );
+        return result;
     }
 
 }

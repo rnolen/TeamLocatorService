@@ -34,9 +34,14 @@ public class TeamLocatorServiceClient implements TeamLocatorService
      * @see com.geocent.teamlocator.service.TeamLocatorService#addMission(com.geocent.teamlocator.dto.MissionDto)
      */
     @Override
-    public MissionDto addMission( MissionDto mission ) {
-        // TODO Auto-generated method stub
-        return null;
+    public MissionDto addMission( MissionDto mission ) throws InvalidMissionException {
+        MissionDto result = null;
+        try {
+            result = getService().addMission( mission );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return result;
     }
 
     /* (non-Javadoc)
@@ -139,21 +144,21 @@ public class TeamLocatorServiceClient implements TeamLocatorService
     }
 
     private TeamLocatorService getService() throws ServiceNotFoundException {
-        
-        Properties props = getInitProperties();
-        try {
-            InitialContext ctx = new InitialContext( props );
-            service = (TeamLocatorService) 
-                    ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
-//                ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
-        } catch( NamingException ex ) {
-            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
-            service = null;
-        }
         if( service == null ) {
-            throw new ServiceNotFoundException( "JNDI lookup failed for TeamLocatorService" );
+            Properties props = getInitProperties();
+            try {
+                InitialContext ctx = new InitialContext( props );
+                service = (TeamLocatorService) 
+                        ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
+//                    ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
+            } catch( NamingException ex ) {
+                Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
+                service = null;
+            }
+            if( service == null ) {
+                throw new ServiceNotFoundException( "JNDI lookup failed for TeamLocatorService" );
+            }
         }
-        
         return service;
     }
     /*
