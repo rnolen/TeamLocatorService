@@ -32,13 +32,17 @@ public class TeamEaoImpl extends AbstractEao implements TeamEao {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
     public List<TeamDto> getTeamByName( String name ) {
         List<TeamDto> result = new ArrayList<TeamDto>();
+        List<Team> resultList = null;
         Query query = em.createQuery( "select t from Team t where upper(t.name) = :name" );
         query.setParameter( "name", name.toUpperCase() );
-        Team team = (Team) query.getSingleResult();
-        result.add( converter.fromEntity( team) );
+        resultList = (List<Team>) query.getResultList();
+        for( Team team : resultList ) {
+            result.add( converter.fromEntity(team) );
+        }
         return result;
     }
 
