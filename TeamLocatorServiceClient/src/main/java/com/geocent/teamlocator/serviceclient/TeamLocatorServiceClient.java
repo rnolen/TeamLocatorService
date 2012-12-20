@@ -133,8 +133,8 @@ public class TeamLocatorServiceClient implements TeamLocatorService
  
         // Should not be necessary for local test (default values), but
         // currently is
-//        result.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
-//        result.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+        result.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
+        result.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
         return result;
     }
 
@@ -144,7 +144,8 @@ public class TeamLocatorServiceClient implements TeamLocatorService
         try {
             InitialContext ctx = new InitialContext( props );
             service = (TeamLocatorService) 
-                ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
+                    ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
+//                ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
         } catch( NamingException ex ) {
             Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
             service = null;
@@ -160,11 +161,11 @@ public class TeamLocatorServiceClient implements TeamLocatorService
      */
     public static void main( String[] args ) {
         TeamLocatorServiceClient client = new TeamLocatorServiceClient();
-//        List<TeamDto> teams = client.getTeamByName( "Alpha" );
-//        if( teams != null && !teams.isEmpty() ) {
-//            System.out.println( "---->DEBUG: Found team: " + teams.get(0).getName() );
-//        } else {
-//            System.out.println( "---->DEBUG: Didn't get ANY teams back!!!" );
-//        }
+        List<TeamDto> teams = client.getTeamByName( "Alpha" );
+        if( teams != null && !teams.isEmpty() ) {
+            System.out.println( "---->DEBUG: Found team: " + teams.get(0).getName() );
+        } else {
+            System.out.println( "---->DEBUG: Didn't get ANY teams back!!!" );
+        }
     }
 }

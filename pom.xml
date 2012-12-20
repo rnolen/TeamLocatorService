@@ -7,6 +7,7 @@
   <packaging>pom</packaging>
   <name>TeamLocator</name>
   <modules>
+    <module>TeamLocatorCommon</module>
     <module>TeamLocatorEar</module>
     <module>TeamLocatorWeb</module>
     <module>TeamLocatorEjb</module>
