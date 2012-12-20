@@ -7,6 +7,8 @@ package com.geocent.teamlocator.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.geocent.teamlocator.enums.MemberRank;
 import com.geocent.teamlocator.enums.TeamRole;
 
@@ -15,6 +17,7 @@ import com.geocent.teamlocator.enums.TeamRole;
  *
  * @author rnolen
  */
+@XmlRootElement
 public class MemberDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
