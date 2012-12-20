@@ -8,10 +8,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author rnolen
  */
+@XmlRootElement
 public class MissionDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 

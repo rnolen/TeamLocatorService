@@ -7,11 +7,14 @@ package com.geocent.teamlocator.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 /**
  *
  * @author rnolen
  */
+@XmlRootElement
 public class ObjectiveDto implements Serializable {
     
     private static final long serialVersionUID = 1L;
