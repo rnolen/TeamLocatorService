@@ -5,6 +5,7 @@
 package com.geocent.teamlocator.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -43,6 +44,9 @@ public class TeamDto implements Serializable {
     }
 
     public List<MemberDto> getMembers() {
+        if( members == null ) {
+            members = new ArrayList<MemberDto>();
+        }
         return members;
     }
 
@@ -51,6 +55,9 @@ public class TeamDto implements Serializable {
     }
 
     public List<MissionDto> getMissions() {
+        if( missions == null ) {
+            missions = new ArrayList<MissionDto>();
+        }
         return missions;
     }
 

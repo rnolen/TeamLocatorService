@@ -4,11 +4,14 @@
  */
 package com.geocent.teamdb.eao;
 
+import com.geocent.teamdb.entity.MissionTeam;
 import com.geocent.teamdb.entity.Team;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.exception.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.Query;
@@ -20,6 +23,8 @@ import javax.persistence.Query;
 @Stateless
 @LocalBean
 public class TeamEaoImpl extends AbstractEao implements TeamEao {
+    @EJB 
+    private MissionEao missionEao;
 
     
     @Override
@@ -52,8 +57,24 @@ public class TeamEaoImpl extends AbstractEao implements TeamEao {
     }
 
     @Override
-    public TeamDto addTeam( TeamDto teamToAdd ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+    public TeamDto addTeam( TeamDto teamToAdd ) throws EntityNotFoundException {
+        TeamDto result = null;
+        // First need to get the Mission from the DB
+        MissionDto mission = missionEao.getMission( teamToAdd.getMissions().get( 0).getId() );
+
+        // Then add the team to the database
+        Team team = converter.toEntity( teamToAdd );
+        team = persist( team );
+        result = converter.fromEntity( team );
+        result.getMissions().add( mission );
+
+        // Then need to create a new MissionTeam object to link the two
+        MissionTeam missionTeam = new MissionTeam();
+        missionTeam.setMission( converter.toEntity( mission ) );
+        missionTeam.setTeam( team );
+        missionTeam = persist( missionTeam );
+        
+        return result;
     }
 
     @Override

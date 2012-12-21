@@ -7,12 +7,14 @@ import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
+import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  * Session Bean implementation class MissionEaoImpl
@@ -49,6 +51,19 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
     public MissionDto getCurrentMission( int teamId ) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public List<MissionDto> getMissionByDescription( String desc ) {
+        List<MissionDto> result = new ArrayList<MissionDto>();
+        List<Mission> resultList = null;
+        Query query = em.createQuery( "select m from Mission m where upper(m.description) = :desc" );
+        query.setParameter( "desc", desc.toUpperCase() );
+        resultList = (List<Mission>) query.getResultList();
+        for( Mission mission : resultList ) {
+            result.add( converter.fromEntity(mission) );
+        }
+        return result;
     }
 
 	/**

@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.ObjectiveDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
 import com.geocent.teamlocator.exception.ServiceNotFoundException;
 import com.geocent.teamlocator.service.IntegrationTestCleanup;
@@ -40,7 +41,7 @@ public class TestTeamLocatorServiceClient
 
     @Test
     public void testAddMissionWithObjective() throws Exception {
-        ObjectiveDto objective = new ObjectiveDto();
+        ObjectiveDto objective = createTestObjective();
         objective.setDescription( "Test Objective" );
         objective.setLatitude( 0.00 );
         objective.setLongitude( 0.00 );
@@ -60,8 +61,36 @@ public class TestTeamLocatorServiceClient
     }
 
     @Test
-    public void testAddTeam() {
-        fail( "Not yet implemented" );
+    public void testGetMissionByDescription() throws Exception {
+        String desc  = "RECON LIC";
+        
+        List<MissionDto> missions = client.getMissionByDescription( desc );
+
+        assertNotNull( "Returned list should not be null", missions );
+        assertEquals( "Should be one entry in the list", 1, missions.size() );
+        assertEquals( desc, missions.get( 0).getDescription() );
+    }
+    
+    @Test
+    public void testAddTeam() throws EntityNotFoundException, InvalidMissionException, ServiceNotFoundException {
+        // To setup, need to add the mission
+        MissionDto mission = createTestMission();
+        ObjectiveDto objective = createTestObjective();
+        mission.setObjective( objective );
+        mission = client.addMission( mission );
+        
+        TeamDto team = new TeamDto();
+        team.setName( "ZEBRA" );
+        
+        team = client.addTeam( team, mission );
+        assertNotNull( "Team should not be null", team );
+        Integer id = team.getId();
+        assertTrue( "Team should have a valid Id", (id != null && id.intValue()>0) );
+        assertTrue( team.getMissions().size()>0 );
+        
+        // Now clean up
+        getCleanupService().deleteTeam( team );
+        getCleanupService().deleteMission( mission );
     }
 
     @Test
@@ -115,6 +144,14 @@ public class TestTeamLocatorServiceClient
         return mission;
     }
 
+    private ObjectiveDto createTestObjective() {
+        ObjectiveDto objective = new ObjectiveDto();
+        objective.setDescription( "Test Objective" );
+        objective.setLatitude( 0.00 );
+        objective.setLongitude( 0.00 );
+        return objective;
+    }
+    
     private Properties getInitProperties() {
         Properties result = new Properties();
         
@@ -139,7 +176,7 @@ public class TestTeamLocatorServiceClient
                 InitialContext ctx = new InitialContext( props );
                 testCleanup = (IntegrationTestCleanup) 
                         ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
-//                    ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/TeamLocatorServiceBean!com.geocent.teamlocator.service.TeamLocatorService" );
+//                    ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
             } catch( NamingException ex ) {
                 Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
                 testCleanup = null;
@@ -151,4 +188,5 @@ public class TestTeamLocatorServiceClient
         
         return testCleanup;
     }
+
 }

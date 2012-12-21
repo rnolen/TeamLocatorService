@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import com.geocent.teamdb.eao.IntegrationCleanupEao;
 import com.geocent.teamdb.eao.MissionEao;
 import com.geocent.teamdb.eao.TeamEao;
 import com.geocent.teamdb.util.Converter;
@@ -31,6 +32,9 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
     @EJB
     private Converter converter;
     
+    @EJB
+    private IntegrationCleanupEao cleanupEao;
+    
     /**
      * Default constructor. 
      */
@@ -39,8 +43,8 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
     }
 
     @Override
-    public void deleteMission( MissionDto mission ) throws EntityNotFoundException {
-        missionEao.delete( converter.toEntity( mission ) );        
+    public void deleteMission( MissionDto missionDto ) throws EntityNotFoundException {
+        cleanupEao.deleteMission( missionDto );        
     }
 
     @Override
@@ -50,8 +54,8 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
     }
 
     @Override
-    public void deleteTeam( TeamDto team ) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
+    public void deleteTeam( TeamDto teamDto ) throws EntityNotFoundException {
+        cleanupEao.deleteTeam( teamDto );
         
     }
 

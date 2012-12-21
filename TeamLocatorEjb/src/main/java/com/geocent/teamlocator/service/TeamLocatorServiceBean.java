@@ -6,6 +6,7 @@ import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
 
 import java.util.ArrayList;
@@ -44,19 +45,13 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     }
 
 	/**
-     * @see TeamLocatorService#getCurrentMission(MemberDto)
-     */
-    public MissionDto getCurrentMission(MemberDto member) {
-        // TODO Auto-generated method stub
-			return null;
-    }
-
-	/**
      * @see TeamLocatorService#addTeam(TeamDto, MissionDto)
      */
-    public TeamDto addTeam(TeamDto team, MissionDto mission) {
-        // TODO Auto-generated method stub
-			return null;
+    public TeamDto addTeam(TeamDto team, MissionDto mission) throws EntityNotFoundException {
+        // Add the mission to the team before calling into the Eao
+        team.getMissions().add( mission );
+        TeamDto result = teamEao.addTeam( team );
+        return result;
     }
 
 	/**
@@ -97,6 +92,20 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     public List<LocationDto> getLastLocationForTeam(TeamDto team, int maxRange) {
         List<LocationDto> list = new ArrayList<LocationDto>();
         return list;
+    }
+
+    @Override
+    public List<MissionDto> getMissionByDescription( String desc ) {
+        System.out.println( "---->DEBUG: TeamLocatorServiceBean.getMissionByDescription" );
+        return missionEao.getMissionByDescription( desc );
+    }
+
+	/**
+     * @see TeamLocatorService#getCurrentMission(MemberDto)
+     */
+    public MissionDto getCurrentMission(MemberDto member) {
+        // TODO Auto-generated method stub
+			return null;
     }
 
 	/**

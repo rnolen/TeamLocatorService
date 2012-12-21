@@ -21,6 +21,16 @@ public interface TeamLocatorService
      * @throws InvalidMissionException if the Mission has no Objective
      */
     public MissionDto addMission( MissionDto mission ) throws InvalidMissionException;
+    
+    /**
+     * Retrieve Mission by description. It should get one Mission, but we don't have a unique constraint on the 
+     * description so there could be more than one.
+     * 
+     * @param desc
+     * @return List of Mission object(s) found with the description.
+     */
+    public List<MissionDto> getMissionByDescription( String desc );
+    
 
     /**
      * Adds the passed Team to the database and adds it to the input Mission

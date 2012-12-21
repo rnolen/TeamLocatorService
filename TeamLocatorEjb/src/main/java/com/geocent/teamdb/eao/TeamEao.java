@@ -9,6 +9,7 @@ import com.geocent.teamdb.entity.Mission;
 import com.geocent.teamdb.entity.Team;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.exception.EntityNotFoundException;
 import javax.ejb.Remote;
 
 /**
@@ -50,7 +51,7 @@ public interface TeamEao
      * @param teamToAdd
      * @return updated TeamDto
      */
-    public TeamDto addTeam( TeamDto teamToAdd );
+    public TeamDto addTeam( TeamDto teamToAdd ) throws EntityNotFoundException;
     
     /**
      * Update the passed team in the database

@@ -45,6 +45,15 @@ public interface MissionEao extends Eao
     MissionDto getCurrentMission( int teamId );
     
     /**
+     * Retrieve Mission by description. It should get one Mission, but we don't have a unique constraint on the 
+     * description so there could be more than one.
+     * 
+     * @param desc
+     * @return List of Mission object(s) found with the description.
+     */
+    List<MissionDto> getMissionByDescription( String desc );
+    
+    /**
      * Add the passed mission to the database
      * @param mission
      * @return Updated Mission
@@ -78,4 +87,5 @@ public interface MissionEao extends Eao
      * PROBABLY DON'T REALLY NEED THIS METHOD - IT CAN BE PART OF BUSINESS LOGIC
      */
     MissionDto removeTeamFromMission( MissionDto mission, TeamDto teamToRemove );
+    
 }
