@@ -18,11 +18,11 @@ public class MissionTeam extends com.geocent.util.jpa.Entity implements Serializ
 	private Integer id;
 
 	//bi-directional many-to-one association to Mission
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Mission mission;
 
 	//bi-directional many-to-one association to Team
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Team team;
 
 	public MissionTeam() {

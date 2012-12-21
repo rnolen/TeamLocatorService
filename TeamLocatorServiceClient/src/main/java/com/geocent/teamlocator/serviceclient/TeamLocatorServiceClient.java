@@ -66,6 +66,17 @@ public class TeamLocatorServiceClient implements TeamLocatorService
         return result;
     }
     
+    @Override
+    public List<MissionDto> getMissionsForTeam( TeamDto team ) throws EntityNotFoundException {
+        List<MissionDto> missions = new ArrayList<MissionDto>();
+        try {
+            missions = getService().getMissionsForTeam( team );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return missions;
+    }
+
     /* (non-Javadoc)
      * @see com.geocent.teamlocator.service.TeamLocatorService#addTeam(com.geocent.teamlocator.dto.TeamDto, com.geocent.teamlocator.dto.MissionDto)
      */
@@ -95,10 +106,14 @@ public class TeamLocatorServiceClient implements TeamLocatorService
      * @see com.geocent.teamlocator.service.TeamLocatorService#removeTeam(com.geocent.teamlocator.dto.TeamDto, com.geocent.teamlocator.dto.MissionDto)
      */
     @Override
-    public TeamDto removeTeam( TeamDto team, MissionDto mission )
-            throws EntityNotFoundException, InvalidMissionException {
-        // TODO Auto-generated method stub
-        return null;
+    public TeamDto removeTeam( TeamDto team, MissionDto mission ) throws EntityNotFoundException, InvalidMissionException {
+        TeamDto updatedTeam = null;
+        try {
+            updatedTeam = getService().removeTeam( team, mission );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return updatedTeam;
     }
 
     /* (non-Javadoc)

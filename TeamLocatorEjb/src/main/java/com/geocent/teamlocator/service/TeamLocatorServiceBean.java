@@ -39,9 +39,11 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
 	/**
      * @see TeamLocatorService#removeTeam(TeamDto, MissionDto)
      */
-    public TeamDto removeTeam(TeamDto team, MissionDto mission) {
-        // TODO Auto-generated method stub
-			return null;
+    public TeamDto removeTeam(TeamDto team, MissionDto mission) throws EntityNotFoundException, InvalidMissionException{
+        missionEao.removeTeamFromMission( mission, team );
+        List<MissionDto> missions = getMissionsForTeam( team );
+        team.setMissions( missions );
+        return team;
     }
 
 	/**
@@ -106,6 +108,12 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     public MissionDto getCurrentMission(MemberDto member) {
         // TODO Auto-generated method stub
 			return null;
+    }
+
+    @Override
+    public List<MissionDto> getMissionsForTeam( TeamDto team ) throws EntityNotFoundException {
+        System.out.println( "---->DEBUG: TeamLocatorServiceBean.getMissionsForTeam" );
+        return missionEao.getMissions( team );
     }
 
 	/**

@@ -30,7 +30,14 @@ public interface TeamLocatorService
      * @return List of Mission object(s) found with the description.
      */
     public List<MissionDto> getMissionByDescription( String desc );
-    
+
+    /**
+     * Returns all Missions that the Team has been assigned to
+     * @param team
+     * @return List of MissionDto objects
+     * @throws EntityNotFoundException if the Team is not found
+     */
+    public List<MissionDto> getMissionsForTeam( TeamDto team ) throws EntityNotFoundException;
 
     /**
      * Adds the passed Team to the database and adds it to the input Mission

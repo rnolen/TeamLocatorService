@@ -2,6 +2,7 @@ package com.geocent.teamlocator.serviceclient;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -41,13 +42,7 @@ public class TestTeamLocatorServiceClient
 
     @Test
     public void testAddMissionWithObjective() throws Exception {
-        ObjectiveDto objective = createTestObjective();
-        objective.setDescription( "Test Objective" );
-        objective.setLatitude( 0.00 );
-        objective.setLongitude( 0.00 );
-        
-        MissionDto mission = createTestMission();
-        mission.setObjective( objective );
+        MissionDto mission = createMissionWithObjective();
         
         mission = client.addMission( mission );
         Integer missionKey = mission.getId();
@@ -70,13 +65,19 @@ public class TestTeamLocatorServiceClient
         assertEquals( "Should be one entry in the list", 1, missions.size() );
         assertEquals( desc, missions.get( 0).getDescription() );
     }
+
+    @Test 
+    public void testGetMissionsForTeam() throws Exception {
+        List<TeamDto> teams = client.getTeamByName( "alpha" );
+        List<MissionDto> missions = client.getMissionsForTeam( teams.get(0) );
+        assertNotNull( "Returned list should not be null", missions );
+        assertTrue( "List should have one mission", missions.size() == 1 );
+    }
     
     @Test
     public void testAddTeam() throws EntityNotFoundException, InvalidMissionException, ServiceNotFoundException {
         // To setup, need to add the mission
-        MissionDto mission = createTestMission();
-        ObjectiveDto objective = createTestObjective();
-        mission.setObjective( objective );
+        MissionDto mission = createMissionWithObjective();
         mission = client.addMission( mission );
         
         TeamDto team = new TeamDto();
@@ -107,9 +108,34 @@ public class TestTeamLocatorServiceClient
     }
 
     @Test
-    public void testRemoveTeam() {
-        fail( "Not yet implemented" );
+    public void testRemoveTeam()  throws Exception {
+        TeamDto team = new TeamDto();
+        team.setName( "ZEBRA" );
+
+        List<MissionDto> missionsCleanup = new ArrayList<MissionDto>();
+        try {
+            for( int i=0; i<3; i++ ) {
+                MissionDto mission = createMissionWithObjective();
+                mission.setDescription( "Mission " + i );
+                mission = client.addMission( mission );
+                missionsCleanup.add(  mission  );
+                team = client.addTeam( team, mission );
+                team.getMissions().clear();
+            }
+            
+            
+            // Setup is complete - now we can try the test
+            client.removeTeam( team, missionsCleanup.get( 0 ) );
+            List<MissionDto> missions = client.getMissionsForTeam( team );
+            assertNotNull( "List of missions should not be null", missions );
+            assertEquals( "Mission list should have 2 items", 2, missions.size() );
+        } finally {
+            // Now clean up behind us
+            getCleanupService().deleteTeam( team );
+            getCleanupService().deleteMissions( missionsCleanup );
+        }
     }
+        
 
     @Test
     public void testAddMember() {
@@ -152,6 +178,14 @@ public class TestTeamLocatorServiceClient
         return objective;
     }
     
+    private MissionDto createMissionWithObjective() {
+        MissionDto mission = createTestMission();
+        ObjectiveDto objective = createTestObjective();
+        mission.setObjective( objective );
+        
+        return mission;
+    }
+
     private Properties getInitProperties() {
         Properties result = new Properties();
         

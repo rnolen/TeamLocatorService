@@ -30,11 +30,12 @@ public interface MissionEao extends Eao
     List<MissionDto> getMissions( Date missionDate );
     
     /**
-     * Get all missions that the passed team Id participated in
-     * @param teamId
+     * Get all missions that the passed Team participated in
+     * @param teamDto
      * @return List of missions
+     * @throws EntityNotFoundException if the Team is not valid
      */
-    List<MissionDto> getMissions( int teamId );
+    List<MissionDto> getMissions( TeamDto teamDto ) throws EntityNotFoundException;
     
     /**
      * Retrieves the latest Mission for the input team Id. The determination is made using the completed flag. If
@@ -83,9 +84,7 @@ public interface MissionEao extends Eao
      * @param mission
      * @param teamToRemove
      * @return the updated Mission
-     * 
-     * PROBABLY DON'T REALLY NEED THIS METHOD - IT CAN BE PART OF BUSINESS LOGIC
      */
-    MissionDto removeTeamFromMission( MissionDto mission, TeamDto teamToRemove );
+    void removeTeamFromMission( MissionDto mission, TeamDto teamToRemove );
     
 }

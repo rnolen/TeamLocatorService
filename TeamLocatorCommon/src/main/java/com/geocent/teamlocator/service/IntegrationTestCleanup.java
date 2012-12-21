@@ -3,6 +3,8 @@
  */
 package com.geocent.teamlocator.service;
 
+import java.util.List;
+
 import javax.ejb.Remote;
 
 import com.geocent.teamlocator.dto.LocationDto;
@@ -19,6 +21,7 @@ import com.geocent.teamlocator.exception.EntityNotFoundException;
 public interface IntegrationTestCleanup
 {
     public void deleteMission( MissionDto mission ) throws EntityNotFoundException;
+    public void deleteMissions( List<MissionDto> missions ) throws EntityNotFoundException;
     public void deleteTeamMember( MemberDto member ) throws EntityNotFoundException;
     public void deleteTeam( TeamDto team ) throws EntityNotFoundException;
     public void deleteLocation( LocationDto location )  throws EntityNotFoundException;

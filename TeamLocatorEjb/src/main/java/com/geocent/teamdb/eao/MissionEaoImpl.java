@@ -1,6 +1,7 @@
 package com.geocent.teamdb.eao;
 
 import com.geocent.teamdb.entity.Mission;
+import com.geocent.teamdb.entity.MissionTeam;
 import com.geocent.teamdb.entity.Team;
 import com.geocent.teamdb.util.Converter;
 import com.geocent.teamlocator.dto.MissionDto;
@@ -11,10 +12,14 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 
 /**
  * Session Bean implementation class MissionEaoImpl
@@ -43,9 +48,25 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
 	/**
      * @see MissionEao#getMissions(int)
      */
-    public List<MissionDto> getMissions(int teamId) {
-        // TODO Auto-generated method stub
-			return null;
+    @SuppressWarnings( "unchecked" )
+    public List<MissionDto> getMissions( TeamDto teamDto ) throws EntityNotFoundException {
+        Team team = converter.toEntity( teamDto );
+        if( !team.hasId() ) {
+            throw new EntityNotFoundException( Team.class, team.getId() );
+        }
+        List<MissionDto> missionList = new ArrayList<MissionDto>();
+        String missionTeamQuery = "SELECT * FROM mission_teams where team_id = ?";
+
+        // Native query that will return list of MissionTeam instances
+        Query mtQuery = em.createNativeQuery( missionTeamQuery, MissionTeam.class );
+        mtQuery.setParameter( 1,  team.getId() );
+        List<MissionTeam> missionTeams = (List<MissionTeam>) mtQuery.getResultList();
+        for( MissionTeam mt : missionTeams ) {
+            missionList.add( converter.fromEntity(mt.getMission()) );
+        }
+        
+        
+        return missionList;
     }
 
     public MissionDto getCurrentMission( int teamId ) {
@@ -91,9 +112,12 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
 	/**
      * @see MissionEao#removeTeamFromMission(Mission, Team)
      */
-    public MissionDto removeTeamFromMission(MissionDto mission, TeamDto teamToRemove) {
-        // TODO Auto-generated method stub
-			return null;
+    public void removeTeamFromMission(MissionDto mission, TeamDto teamToRemove) {
+        Query query = em.createNativeQuery( "DELETE FROM mission_teams WHERE mission_id = ? AND team_id = ?" );
+        query.setParameter( 1, mission.getId() );
+        query.setParameter( 2, teamToRemove.getId() );
+        int rowCount = query.executeUpdate();
+        Logger.getLogger( MissionEaoImpl.class.getName() ).log( Level.INFO, "---->DEBUG: removed " + rowCount + " MissionTeam rows" );
     }
 
 	/**

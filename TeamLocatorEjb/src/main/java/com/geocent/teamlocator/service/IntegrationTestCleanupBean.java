@@ -1,5 +1,7 @@
 package com.geocent.teamlocator.service;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -45,6 +47,13 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
     @Override
     public void deleteMission( MissionDto missionDto ) throws EntityNotFoundException {
         cleanupEao.deleteMission( missionDto );        
+    }
+
+    @Override
+    public void deleteMissions( List<MissionDto> missions ) throws EntityNotFoundException {
+        for( MissionDto mission : missions ) {
+            cleanupEao.deleteMission( mission );
+        }
     }
 
     @Override
