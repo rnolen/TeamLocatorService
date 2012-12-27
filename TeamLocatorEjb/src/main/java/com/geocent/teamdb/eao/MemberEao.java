@@ -57,17 +57,11 @@ public interface MemberEao extends Eao
     public List<MemberDto> getMembers( String lastName, String middleName, String firstName );
     
     /**
-     * Add passed member to the database.
+     * Adds passed member to the database or updates, it it already exists.
      * @param memberToAdd
      * @return updated Member
      * @throws EntityNotFoundException if the TeamDto held by the MemberDto is invalid. 
      */
-    public MemberDto addMember( MemberDto memberToAdd ) throws EntityNotFoundException;
+    public MemberDto saveMember( MemberDto memberToAdd ) throws EntityNotFoundException;
     
-    /**
-     * Update the member record passed
-     * @param memberToUpdate
-     * @return Updated Member
-     */
-    public MemberDto updateMember( MemberDto memberToUpdate );
 }

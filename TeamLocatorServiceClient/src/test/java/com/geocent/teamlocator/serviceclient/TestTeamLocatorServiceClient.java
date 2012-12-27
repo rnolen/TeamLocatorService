@@ -174,8 +174,47 @@ public class TestTeamLocatorServiceClient
     }
 
     @Test
-    public void testRemoveMember() {
-        fail( "Not yet implemented" );
+    public void testGetMembersByName() {
+        List<MemberDto> members = client.getMembers( "mccoy", null, null );
+        assertNotNull( "Returned list should not be null", members );
+        assertEquals( "Returned list should have one item", 1, members.size() );
+        
+        members = client.getMembers( null,  "", "alvin" );
+        assertNotNull( "Returned list should not be null", members );
+        assertEquals( "Returned list should have one item", 1, members.size() );
+        
+        members = client.getMembers( null,  null,  null );
+        assertNotNull( "Returned list should not be null", members );
+        assertEquals( "Returned list should have three items", 3, members.size() );
+    }
+    
+    @Test
+    public void testReassignMemberWithValidTeam() throws Exception {
+        List<MemberDto> members = client.getMembers( "mccoy", null, null );
+        MemberDto member = members.get(0);
+        TeamDto origTeam = member.getTeam();
+        assertEquals( "Original team Id should be 1", 1, origTeam.getId() );
+        
+        List<TeamDto> teams = client.getTeamByName( "bravo" );
+        member = client.reassignMember( member, teams.get( 0 ) );
+        assertEquals( "New team should have Id=2", 2, member.getTeam().getId() );
+        
+        // Finally re-assign back to the original team
+        member = client.reassignMember( member, origTeam );
+        assertEquals( "Should be back to original team with Id=1", 1, member.getTeam().getId() );
+        
+    }
+
+    @Test( expected=EntityNotFoundException.class )
+    public void testReassignMemberWithInvalidTeam() throws Exception {
+        List<MemberDto> members = client.getMembers( "mccoy", null, null );
+        MemberDto member = members.get(0);
+        TeamDto origTeam = member.getTeam();
+        assertEquals( "Original team Id should be 1", 1, origTeam.getId() );
+
+        TeamDto newTeam = new TeamDto();
+        member = client.reassignMember( member, newTeam );
+        fail( "Should not have reached this point" );
     }
 
     @Test

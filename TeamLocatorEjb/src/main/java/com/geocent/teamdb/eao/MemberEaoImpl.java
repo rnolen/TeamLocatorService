@@ -1,9 +1,11 @@
 package com.geocent.teamdb.eao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import com.geocent.teamdb.entity.Member;
 import com.geocent.teamdb.entity.Team;
@@ -51,15 +53,35 @@ public class MemberEaoImpl extends AbstractEao implements MemberEao {
         return null;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    public List<MemberDto> getMembers( String lastName, String middleName,
-            String firstName ) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<MemberDto> getMembers( String lastName, String middleName, String firstName ) {
+        List<MemberDto> memberDtos = new ArrayList<MemberDto>();
+        String queryString = createQueryString( lastName, middleName, firstName );
+        Query query = em.createQuery( queryString );
+        setParameter( query, "lastName", lastName );
+        setParameter( query, "middleName", middleName );
+        setParameter( query, "firstName", firstName );
+        System.out.println( "---->DEBUG: MemberEao.getMembers query string=" + queryString );
+        List<Member> members = (List<Member>) query.getResultList();
+        for( Member member : members ) {
+            MemberDto dto = converter.fromEntity( member );
+            TeamDto teamDto = converter.fromEntity( member.getTeam() );
+            dto.setTeam( teamDto );
+            memberDtos.add( dto );
+        }
+        return memberDtos;
+    }
+
+    private void setParameter( Query query, String fieldName, String value ) {
+        System.out.println( "---->DEBUG: Setting parameter " + fieldName + " to value " + value );
+        if( value != null && !value.isEmpty() ) {
+            query.setParameter( fieldName, value.toUpperCase() );
+        }
     }
 
     @Override
-    public MemberDto addMember( MemberDto memberToAdd ) throws EntityNotFoundException {
+    public MemberDto saveMember( MemberDto memberToAdd ) throws EntityNotFoundException {
         MemberDto result = null;
         Member member = converter.toEntity( memberToAdd );
         Team team = converter.toEntity( memberToAdd.getTeam() );
@@ -75,10 +97,31 @@ public class MemberEaoImpl extends AbstractEao implements MemberEao {
         return result;
     }
 
-    @Override
-    public MemberDto updateMember( MemberDto memberToUpdate ) {
-        // TODO Auto-generated method stub
-        return null;
+    private String createQueryString( String lastName, String middleName, String firstName ) {
+        boolean lastNameOk = lastName != null && !lastName.isEmpty();
+        boolean middleNameOk = middleName != null && !middleName.isEmpty();
+        boolean firstNameOk = firstName != null && !firstName.isEmpty();
+        StringBuilder sb = new StringBuilder();
+        sb.append( "SELECT m from Member m " );
+        if( lastNameOk || middleNameOk || firstNameOk ) {
+            sb.append(  "WHERE"  );
+            if( lastNameOk ) {
+                sb.append( " upper(m.lastName) = :lastName" );
+            }
+            if( middleNameOk ) {
+                if( lastNameOk ) {
+                    sb.append( " AND"  );
+                }
+                sb.append( " upper(m.middleName) = :middleName" );
+            }
+            if( firstNameOk ) {
+                if( lastNameOk || middleNameOk ) {
+                    sb.append( " AND" );
+                }
+                sb.append( " upper(m.firstName) = :firstName" );
+            }
+        }
+        return sb.toString();
+        
     }
-
 }

@@ -131,13 +131,33 @@ public class TeamLocatorServiceClient implements TeamLocatorService
     }
 
     /* (non-Javadoc)
-     * @see com.geocent.teamlocator.service.TeamLocatorService#removeMember(com.geocent.teamlocator.dto.MemberDto, com.geocent.teamlocator.dto.TeamDto)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#getMembers(String, String, String)
      */
     @Override
-    public TeamDto removeMember( MemberDto member, TeamDto team )
-            throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<MemberDto> getMembers( String lastName, String middleName, String firstName ) {
+        List<MemberDto> members = new ArrayList<MemberDto>();
+        try {
+            members = getService().getMembers( lastName, middleName, firstName );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        
+        return members;
+        
+    }
+    
+    /* (non-Javadoc)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#reassignMember(com.geocent.teamlocator.dto.MemberDto, com.geocent.teamlocator.dto.TeamDto)
+     */
+    @Override
+    public MemberDto reassignMember( MemberDto member, TeamDto team ) throws EntityNotFoundException {
+        MemberDto result = null;
+        try {
+            result = getService().reassignMember( member, team );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return result;
     }
 
     /* (non-Javadoc)

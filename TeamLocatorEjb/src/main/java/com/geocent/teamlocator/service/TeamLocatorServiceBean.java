@@ -76,11 +76,14 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     }
 
 	/**
-     * @see TeamLocatorService#removeMember(MemberDto, TeamDto)
+     * @throws EntityNotFoundException 
+	 * @see TeamLocatorService#reassignMember(MemberDto, TeamDto)
      */
-    public TeamDto removeMember(MemberDto member, TeamDto team) {
-        // TODO Auto-generated method stub
-			return null;
+    public MemberDto reassignMember(MemberDto member, TeamDto team) throws EntityNotFoundException {
+        // Set the team into the MemberDto object before passing on to the Eao
+        member.setTeam( team );
+        MemberDto updatedMember = memberEao.saveMember( member );
+        return updatedMember;
     }
 
 	/**
@@ -89,8 +92,13 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     public MemberDto addMember(MemberDto member, TeamDto team) throws EntityNotFoundException {
         // Set the team into the MemberDto object before passing on to the Eao
         member.setTeam( team );
-        MemberDto updatedMember = memberEao.addMember( member );
+        MemberDto updatedMember = memberEao.saveMember( member );
 		return updatedMember;
+    }
+
+    @Override
+    public List<MemberDto> getMembers( String lastName, String middleName, String firstName ) {
+        return memberEao.getMembers( lastName, middleName, firstName );
     }
 
 	/**

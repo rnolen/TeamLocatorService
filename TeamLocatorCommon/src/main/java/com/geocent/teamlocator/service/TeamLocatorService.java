@@ -76,13 +76,22 @@ public interface TeamLocatorService
     public MemberDto addMember( MemberDto member, TeamDto team ) throws EntityNotFoundException;
 
     /**
-     * Removes the input Member from the input Team, but does NOT remove the member from the database.
+     * Get the Member(s) matching the input criteria
+     * @param lastName
+     * @param middleName
+     * @param firstName
+     * @return
+     */
+    public List<MemberDto> getMembers( String lastName, String middleName, String firstName );
+    
+    /**
+     * Reassigns the input Member from their existing team to the input Team.
      * @param member
      * @param team
      * @return
      * @throws EntityNotFoundException if either the input Member or Team is not found
      */
-    public TeamDto removeMember( MemberDto member, TeamDto team ) throws EntityNotFoundException;
+    public MemberDto reassignMember( MemberDto member, TeamDto team ) throws EntityNotFoundException;
     
     /**
      * Gets the current mission for the input Member
