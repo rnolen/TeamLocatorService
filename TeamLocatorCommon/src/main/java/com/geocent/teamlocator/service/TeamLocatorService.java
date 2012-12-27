@@ -97,9 +97,9 @@ public interface TeamLocatorService
      * Gets the current mission for the input Member
      * @param member
      * @return current Mission
-     * @throws EntityNotFoundException if the input Member is not found
+     * @throws EntityNotFoundException if the input Member or associated Team is not found
      */
-    public MissionDto getCurrentMission( MemberDto member) throws EntityNotFoundException;
+    public List<MissionDto> getCurrentMission( MemberDto member) throws EntityNotFoundException;
 
     /**
      * Adds the input Location to the database for the passed member Id

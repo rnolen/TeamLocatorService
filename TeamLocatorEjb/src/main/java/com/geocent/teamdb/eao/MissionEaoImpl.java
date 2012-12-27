@@ -69,11 +69,28 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
         return missionList;
     }
 
-    public MissionDto getCurrentMission( int teamId ) {
-        // TODO Auto-generated method stub
-        return null;
+    @SuppressWarnings( "unchecked" )
+    public List<MissionDto> getCurrentMission( int teamId ) {
+        List<MissionDto> result = new ArrayList<MissionDto>();
+
+        // Current business logic in the query is that the mission is considered 'current' if it's not marked as complete
+        // There's probably additional business logic that needs to be involved. May need an additional column to indicate
+        // 'active', or maybe some calculation based on current date.
+        String queryString = "SELECT m.* From mission m, mission_teams t " + 
+                                "WHERE upper(m.completed)!= 'Y' AND " + 
+                                       "m.id=t.mission_id AND " + 
+                                       "t.team_id=?";
+        
+        Query query = em.createNativeQuery( queryString, Mission.class );
+        query.setParameter( 1, teamId );
+        List<Mission> missions = (List<Mission>)query.getResultList();
+        for( Mission mission : missions ) {
+            result.add(  converter.fromEntity( mission ) );
+        }
+        return result;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
     public List<MissionDto> getMissionByDescription( String desc ) {
         List<MissionDto> result = new ArrayList<MissionDto>();
@@ -99,25 +116,6 @@ public class MissionEaoImpl extends AbstractEao implements MissionEao {
         mission = persist( mission );
         result = converter.fromEntity( mission );
         return result;
-    }
-
-	/**
-     * @see MissionEao#addTeamToMission(MissionDto, TeamDto)
-     */
-    public MissionDto addTeamToMission(MissionDto mission, TeamDto teamToAdd) {
-        // TODO Auto-generated method stub
-			return null;
-    }
-
-	/**
-     * @see MissionEao#removeTeamFromMission(Mission, Team)
-     */
-    public void removeTeamFromMission(MissionDto mission, TeamDto teamToRemove) {
-        Query query = em.createNativeQuery( "DELETE FROM mission_teams WHERE mission_id = ? AND team_id = ?" );
-        query.setParameter( 1, mission.getId() );
-        query.setParameter( 2, teamToRemove.getId() );
-        int rowCount = query.executeUpdate();
-        Logger.getLogger( MissionEaoImpl.class.getName() ).log( Level.INFO, "---->DEBUG: removed " + rowCount + " MissionTeam rows" );
     }
 
 	/**

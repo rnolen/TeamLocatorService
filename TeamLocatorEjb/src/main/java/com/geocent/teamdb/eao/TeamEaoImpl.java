@@ -11,6 +11,9 @@ import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -82,7 +85,15 @@ public class TeamEaoImpl extends AbstractEao implements TeamEao {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    /**
+     * @see TeamEao#removeTeamFromMission(Mission, Team)
+     */
+    public void removeTeamFromMission(MissionDto mission, TeamDto teamToRemove) {
+        Query query = em.createNativeQuery( "DELETE FROM mission_teams WHERE mission_id = ? AND team_id = ?" );
+        query.setParameter( 1, mission.getId() );
+        query.setParameter( 2, teamToRemove.getId() );
+        int rowCount = query.executeUpdate();
+        Logger.getLogger( MissionEaoImpl.class.getName() ).log( Level.INFO, "---->DEBUG: removed " + rowCount + " MissionTeam rows" );
+    }
 
 }

@@ -59,4 +59,13 @@ public interface TeamEao extends Eao
      * @return updated Team
      */
     public TeamDto updateTeam( TeamDto teamToUpdate );
+
+    /**
+     * Remove the passed team from the passed mission
+     * @param mission
+     * @param teamToRemove
+     * @return the updated Mission
+     */
+    void removeTeamFromMission( MissionDto mission, TeamDto teamToRemove );
+    
 }

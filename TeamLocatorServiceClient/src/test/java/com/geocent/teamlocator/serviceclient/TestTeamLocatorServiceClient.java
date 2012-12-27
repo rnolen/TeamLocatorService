@@ -3,7 +3,9 @@ package com.geocent.teamlocator.serviceclient;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -218,8 +220,35 @@ public class TestTeamLocatorServiceClient
     }
 
     @Test
-    public void testGetCurrentMission() {
-        fail( "Not yet implemented" );
+    public void testGetCurrentMission() throws Exception {
+        GregorianCalendar calendar = new GregorianCalendar();
+
+        List<MemberDto> members = client.getMembers( "mccoy", null, "ken" );
+        MemberDto member = members.get( 0 );
+        TeamDto team = member.getTeam();
+        
+        List<MissionDto> missionsCleanup = new ArrayList<MissionDto>();
+        try {
+            for( int i=0; i<3; i++ ) {
+                calendar.add( Calendar.MONTH, (i*-1) );
+                MissionDto mission = createMissionWithObjective();
+                mission.setMissionDate( calendar.getTime() );
+                mission.setCompleted( true );
+                mission.setDescription( "Mission " + i );
+                mission = client.addMission( mission );
+                missionsCleanup.add(  mission  );
+                team = client.addTeam( team, mission );
+                team.getMissions().clear();
+            }
+
+            // All of the above was setup - here's where the test actually starts>>>
+            List<MissionDto> missions = client.getCurrentMission( members.get( 0 ) );
+            assertEquals( "Should only be one mission returned", 1, missions.size() );
+            assertEquals( "Mission Id should be 1", 1, missions.get( 0 ).getId() );
+        } finally {
+            // Clean up the missions created above
+            getCleanupService().deleteMissions( missionsCleanup );
+        }
     }
 
     @Test

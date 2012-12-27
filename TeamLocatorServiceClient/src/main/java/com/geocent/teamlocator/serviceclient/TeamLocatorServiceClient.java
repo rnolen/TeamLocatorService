@@ -49,10 +49,14 @@ public class TeamLocatorServiceClient implements TeamLocatorService
      * @see com.geocent.teamlocator.service.TeamLocatorService#getCurrentMission(com.geocent.teamlocator.dto.MemberDto)
      */
     @Override
-    public MissionDto getCurrentMission( MemberDto member )
-            throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<MissionDto> getCurrentMission( MemberDto member ) throws EntityNotFoundException {
+        List<MissionDto> result = new ArrayList<MissionDto>();
+        try {
+            result = getService().getCurrentMission( member );
+        } catch( ServiceNotFoundException ex ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+        return result;
     }
 
     @Override

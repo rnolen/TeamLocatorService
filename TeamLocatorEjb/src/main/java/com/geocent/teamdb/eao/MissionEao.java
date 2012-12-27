@@ -43,7 +43,7 @@ public interface MissionEao extends Eao
      * @param teamId
      * @return
      */
-    MissionDto getCurrentMission( int teamId );
+    List<MissionDto> getCurrentMission( int teamId );
     
     /**
      * Retrieve Mission by description. It should get one Mission, but we don't have a unique constraint on the 
@@ -68,23 +68,5 @@ public interface MissionEao extends Eao
      * @return the updated Mission
      */
     MissionDto updateMission( MissionDto mission );
-    
-    /**
-     * Add the passed team to the passed mission
-     * @param mission
-     * @param teamToAdd
-     * @return the updated Mission
-     * 
-     * PROBABLY DON'T REALLY NEED THIS METHOD - IT CAN BE PART OF BUSINESS LOGIC
-     */
-    MissionDto addTeamToMission( MissionDto mission, TeamDto teamToAdd );
-    
-    /**
-     * Remove the passed team from the passed mission
-     * @param mission
-     * @param teamToRemove
-     * @return the updated Mission
-     */
-    void removeTeamFromMission( MissionDto mission, TeamDto teamToRemove );
     
 }
