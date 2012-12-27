@@ -17,7 +17,7 @@ import javax.ejb.Remote;
  *
  */
 @Remote
-public interface TeamEao
+public interface TeamEao extends Eao
 {
     /**
      * Get Team by key

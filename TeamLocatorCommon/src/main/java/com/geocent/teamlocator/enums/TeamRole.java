@@ -11,5 +11,6 @@ public enum TeamRole {
     TEAM_LEADER,
     SQUAD_LEADER,
     MEMBER,
-    SNIPER
+    SNIPER, 
+    XO
 }

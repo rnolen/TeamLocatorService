@@ -15,9 +15,12 @@ import javax.naming.NamingException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.ObjectiveDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.enums.MemberRank;
+import com.geocent.teamlocator.enums.TeamRole;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
 import com.geocent.teamlocator.exception.ServiceNotFoundException;
@@ -138,8 +141,36 @@ public class TestTeamLocatorServiceClient
         
 
     @Test
-    public void testAddMember() {
-        fail( "Not yet implemented" );
+    public void testAddMemberWithValidTeam() throws Exception {
+        
+        List<TeamDto> teams = client.getTeamByName( "alpha" );
+        MemberDto memberDto = new MemberDto();
+        memberDto.setFirstName( "Malcolm" );
+        memberDto.setLastName( "Pickering" );
+        memberDto.setRank( MemberRank.LIEUTENANT );
+        memberDto.setRole( TeamRole.XO );
+        memberDto.setTeam( teams.get( 0 ) );
+        try {
+            memberDto = client.addMember( memberDto, teams.get(0) );
+            assertNotNull( "Updated member should not be null", memberDto );
+            assertTrue( "Updated member should have valid Id", (memberDto.getId() != null && memberDto.getId().intValue()>0) );
+            TeamDto team = memberDto.getTeam();
+            assertTrue( "Updated member should have the same team Id sent", team.getId().equals(teams.get(0).getId()) );
+        } finally {
+            // Remove the team member we just added
+            getCleanupService().deleteTeamMember( memberDto );
+        }
+    }
+
+    @Test(expected=EntityNotFoundException.class)
+    public void testAddMemberWithInvalidTeam() throws Exception {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setFirstName( "Malcolm" );
+        memberDto.setLastName( "Pickering" );
+        memberDto.setRank( MemberRank.LIEUTENANT );
+        memberDto.setRole( TeamRole.XO );
+        TeamDto teamDto = new TeamDto();
+        client.addMember( memberDto, teamDto );
     }
 
     @Test

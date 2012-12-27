@@ -27,11 +27,15 @@ public class Location extends com.geocent.util.jpa.Entity implements Serializabl
 
 	private double longitude;
 
-	//bi-directional many-to-one association to Member
-	@ManyToOne
-	private Member member;
+    //bi-directional many-to-one association to Member
+    @ManyToOne
+    private Member member;
 
-	//bi-directional many-to-one association to Mission
+    //bi-directional many-to-one association to Team
+    @ManyToOne
+    private Team team;
+
+    //bi-directional many-to-one association to Mission
 	@ManyToOne
 	private Mission mission;
 
@@ -85,6 +89,14 @@ public class Location extends com.geocent.util.jpa.Entity implements Serializabl
 	public void setMember(Member member) {
 		this.member = member;
 	}
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam( Team team ) {
+        this.team = team;
+    }
 
 	public Mission getMission() {
 		return this.mission;

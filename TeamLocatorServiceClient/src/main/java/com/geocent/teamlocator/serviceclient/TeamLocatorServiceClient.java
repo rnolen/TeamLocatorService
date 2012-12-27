@@ -120,10 +120,14 @@ public class TeamLocatorServiceClient implements TeamLocatorService
      * @see com.geocent.teamlocator.service.TeamLocatorService#addMember(com.geocent.teamlocator.dto.MemberDto, com.geocent.teamlocator.dto.TeamDto)
      */
     @Override
-    public MemberDto addMember( MemberDto member, TeamDto team )
-            throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public MemberDto addMember( MemberDto member, TeamDto team ) throws EntityNotFoundException {
+        MemberDto result = null;
+        try {
+            result = getService().addMember( member, team );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return result;
     }
 
     /* (non-Javadoc)

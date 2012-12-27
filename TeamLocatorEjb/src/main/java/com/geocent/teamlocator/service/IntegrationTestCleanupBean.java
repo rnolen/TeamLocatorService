@@ -58,7 +58,7 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
 
     @Override
     public void deleteTeamMember( MemberDto member ) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
+        cleanupEao.deleteMember( member );
         
     }
 

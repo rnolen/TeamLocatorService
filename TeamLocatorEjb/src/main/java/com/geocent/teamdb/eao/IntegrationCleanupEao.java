@@ -5,6 +5,7 @@ package com.geocent.teamdb.eao;
 
 import javax.ejb.Remote;
 
+import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
@@ -29,5 +30,12 @@ public interface IntegrationCleanupEao extends Eao
      * @throws EntityNotFoundException 
      */
     void deleteTeam( TeamDto teamDto ) throws EntityNotFoundException;
+    
+    /**
+     * Deletes the passed Member from the database. Does not affect any other tables 
+     * @param memberDto
+     * @throws EntityNotFoundException if the Member is not found
+     */
+    void deleteMember( MemberDto memberDto ) throws EntityNotFoundException;
 
 }

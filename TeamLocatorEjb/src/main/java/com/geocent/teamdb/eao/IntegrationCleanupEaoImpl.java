@@ -10,8 +10,10 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
+import com.geocent.teamdb.entity.Member;
 import com.geocent.teamdb.entity.Mission;
 import com.geocent.teamdb.entity.Team;
+import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
@@ -65,6 +67,12 @@ public class IntegrationCleanupEaoImpl extends AbstractEao implements Integratio
         
         // Now delete the mission
         this.delete( team );
+    }
+
+    @Override
+    public void deleteMember( MemberDto memberDto ) throws EntityNotFoundException {
+        Member member = converter.toEntity( memberDto );
+        this.delete( member );
     }
 
 }

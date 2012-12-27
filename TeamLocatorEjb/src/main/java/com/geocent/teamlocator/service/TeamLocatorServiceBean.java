@@ -1,5 +1,6 @@
 package com.geocent.teamlocator.service;
 
+import com.geocent.teamdb.eao.MemberEao;
 import com.geocent.teamdb.eao.MissionEao;
 import com.geocent.teamdb.eao.TeamEao;
 import com.geocent.teamlocator.dto.LocationDto;
@@ -28,6 +29,8 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     protected MissionEao missionEao; 
     @EJB
     protected TeamEao teamEao;
+    @EJB
+    protected MemberEao memberEao;
 
     /**
      * Default constructor. 
@@ -83,9 +86,11 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
 	/**
      * @see TeamLocatorService#addMember(MemberDto, TeamDto)
      */
-    public MemberDto addMember(MemberDto member, TeamDto team) {
-        // TODO Auto-generated method stub
-			return null;
+    public MemberDto addMember(MemberDto member, TeamDto team) throws EntityNotFoundException {
+        // Set the team into the MemberDto object before passing on to the Eao
+        member.setTeam( team );
+        MemberDto updatedMember = memberEao.addMember( member );
+		return updatedMember;
     }
 
 	/**
