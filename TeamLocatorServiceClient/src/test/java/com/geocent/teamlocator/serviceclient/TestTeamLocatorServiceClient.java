@@ -189,7 +189,7 @@ public class TestTeamLocatorServiceClient
         
         members = client.getMembers( null,  null,  null );
         assertNotNull( "Returned list should not be null", members );
-        assertEquals( "Returned list should have three items", 3, members.size() );
+        assertEquals( "Returned list should have three items", 7, members.size() );
     }
     
     @Test
@@ -257,44 +257,9 @@ public class TestTeamLocatorServiceClient
     public void testMemberLocationServices() throws Exception {
         List<LocationDto> cleanupList = new ArrayList<LocationDto>();
         try {
-            List<TeamDto> teams = client.getTeamByName( "alpha" );
-            TeamDto team = teams.get( 0 );
+            TeamDto team  = client.getTeamByName( "alpha" ).get( 0 );
             List<MemberDto> members = client.getMembersOfTeam( team );
-            List<MissionDto> missions = client.getCurrentMission( members.get( 0 ) );
-            MissionDto mission = missions.get( 0 );
-            
-            LocationDto location = new LocationDto();
-            location.setDateStamp( new Date() );
-            location.setLattitude( 32.86000 );
-            location.setLongitude( -79.96000 ); // distance 1.522km from objective
-            location.setElevation( 0 );
-            location.setMember( members.get( 0 ) );
-            location.setMission( mission );
-            location.setTeam( team );
-            location = client.addMemberLocation( location );
-            cleanupList.add( location );
-            
-            location = new LocationDto();
-            location.setDateStamp( new Date() );
-            location.setLattitude( 32.86800 );
-            location.setLongitude( -79.97000 ); // distance .36km from objective; 1.290km from leader
-            location.setElevation( 0 );
-            location.setMember( members.get( 1 ) );
-            location.setMission( mission );
-            location.setTeam( team );
-            location = client.addMemberLocation( location );
-            cleanupList.add( location );
-            
-            location = new LocationDto();
-            location.setDateStamp( new Date() );
-            location.setLattitude( 32.86890 );
-            location.setLongitude( -79.96900 ); // distance .48km from objective; 1.298km from leader 
-            location.setElevation( 0 );
-            location.setMember( members.get( 2 ) );
-            location.setMission( mission );
-            location.setTeam( team );
-            location = client.addMemberLocation( location );
-            cleanupList.add( location );
+            MissionDto mission = client.getCurrentMission( members.get(0) ).get(0);
             
             List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1000 );
             assertNotNull( "List of locations should not be null", teamLocations );
@@ -312,13 +277,13 @@ public class TestTeamLocatorServiceClient
 
     @Test
     public void testGetLastLocationForTeamWithNoLocations() throws Exception {
-        List<TeamDto> teams = client.getTeamByName( "alpha" );
+        List<TeamDto> teams = client.getTeamByName( "bravo" );
         TeamDto team = teams.get( 0 );
         List<MemberDto> members = client.getMembersOfTeam( team );
         
-        List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1000 );
+        List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 10 );
         assertNotNull( "List of locations should not be null", teamLocations );
-        assertTrue( "Should have returned 2 locations", teamLocations.size() == 2 );
+        assertEquals( "Should have returned 3 locations", 3, teamLocations.size() );
         
         boolean allUnknown = true;
         
