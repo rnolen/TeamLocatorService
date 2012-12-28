@@ -95,6 +95,7 @@ public class Converter
         dto.setLattitude( location.getLattitude() );
         dto.setLongitude( location.getLongitude() );
         dto.setMember( fromEntity( location.getMember()) );
+        dto.setTeam( fromEntity(location.getTeam()) );
         dto.setMission( fromEntity(location.getMission()) );
         return dto;
     }
@@ -164,6 +165,7 @@ public class Converter
         location.setLattitude( locationDto.getLattitude() );
         location.setLongitude( locationDto.getLongitude() );
         location.setMember( toEntity( locationDto.getMember()) );
+        location.setTeam( toEntity(locationDto.getTeam()) );
         location.setMission( toEntity(locationDto.getMission()) );
         return location;
     }

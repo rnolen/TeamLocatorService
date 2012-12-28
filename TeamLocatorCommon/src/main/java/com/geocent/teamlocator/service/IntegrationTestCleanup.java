@@ -25,4 +25,5 @@ public interface IntegrationTestCleanup
     public void deleteTeamMember( MemberDto member ) throws EntityNotFoundException;
     public void deleteTeam( TeamDto team ) throws EntityNotFoundException;
     public void deleteLocation( LocationDto location )  throws EntityNotFoundException;
+    public void deleteLocations( List<LocationDto> locations )  throws EntityNotFoundException;
 }

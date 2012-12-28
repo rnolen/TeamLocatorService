@@ -70,8 +70,15 @@ public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
 
     @Override
     public void deleteLocation( LocationDto location ) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
+        cleanupEao.delete( converter.toEntity( location ) );
         
+    }
+
+    @Override
+    public void deleteLocations( List<LocationDto> locations ) throws EntityNotFoundException {
+        for( LocationDto location : locations ) {
+            cleanupEao.delete( converter.toEntity( location ) );
+        }
     }
 
 }

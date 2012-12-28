@@ -30,8 +30,15 @@ public class LocationDto implements Serializable {
     private boolean noRecentUpdate;
 
     private MemberDto member;
+    
+    private TeamDto team;
 
     private MissionDto mission;
+    
+    /**
+     * range is a non-persisted value and carries the distance from some other location
+     */
+    private double range;
 
     public Integer getId() {
         return id;
@@ -95,6 +102,22 @@ public class LocationDto implements Serializable {
 
     public void setMission( MissionDto mission ) {
         this.mission = mission;
+    }
+
+    public TeamDto getTeam() {
+        return team;
+    }
+
+    public void setTeam( TeamDto team ) {
+        this.team = team;
+    }
+
+    public double getRange() {
+        return range;
+    }
+
+    public void setRange( double range ) {
+        this.range = range;
     }
     
 }

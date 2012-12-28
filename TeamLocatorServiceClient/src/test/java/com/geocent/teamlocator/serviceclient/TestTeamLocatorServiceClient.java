@@ -17,6 +17,7 @@ import javax.naming.NamingException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.ObjectiveDto;
@@ -30,6 +31,7 @@ import com.geocent.teamlocator.service.IntegrationTestCleanup;
 
 public class TestTeamLocatorServiceClient
 {
+    public static final double UNKNOWN_LOC = -1.0;
     private TeamLocatorServiceClient client;
     private IntegrationTestCleanup testCleanup;
 
@@ -252,13 +254,81 @@ public class TestTeamLocatorServiceClient
     }
 
     @Test
-    public void testAddMemberLocation() {
-        fail( "Not yet implemented" );
+    public void testMemberLocationServices() throws Exception {
+        List<LocationDto> cleanupList = new ArrayList<LocationDto>();
+        try {
+            List<TeamDto> teams = client.getTeamByName( "alpha" );
+            TeamDto team = teams.get( 0 );
+            List<MemberDto> members = client.getMembersOfTeam( team );
+            List<MissionDto> missions = client.getCurrentMission( members.get( 0 ) );
+            MissionDto mission = missions.get( 0 );
+            
+            LocationDto location = new LocationDto();
+            location.setDateStamp( new Date() );
+            location.setLattitude( 32.86000 );
+            location.setLongitude( -79.96000 ); // distance 1.522km from objective
+            location.setElevation( 0 );
+            location.setMember( members.get( 0 ) );
+            location.setMission( mission );
+            location.setTeam( team );
+            location = client.addMemberLocation( location );
+            cleanupList.add( location );
+            
+            location = new LocationDto();
+            location.setDateStamp( new Date() );
+            location.setLattitude( 32.86800 );
+            location.setLongitude( -79.97000 ); // distance .36km from objective; 1.290km from leader
+            location.setElevation( 0 );
+            location.setMember( members.get( 1 ) );
+            location.setMission( mission );
+            location.setTeam( team );
+            location = client.addMemberLocation( location );
+            cleanupList.add( location );
+            
+            location = new LocationDto();
+            location.setDateStamp( new Date() );
+            location.setLattitude( 32.86890 );
+            location.setLongitude( -79.96900 ); // distance .48km from objective; 1.298km from leader 
+            location.setElevation( 0 );
+            location.setMember( members.get( 2 ) );
+            location.setMission( mission );
+            location.setTeam( team );
+            location = client.addMemberLocation( location );
+            cleanupList.add( location );
+            
+            List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1000 );
+            assertNotNull( "List of locations should not be null", teamLocations );
+            assertTrue( "Should not have returned any locations", teamLocations.size() == 0 );
+            
+            // Now widen the range and try again
+            teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1500 );
+            assertTrue( "Should have gotten 2 locations this time", teamLocations.size() == 2 );
+
+        } finally {
+            // Now cleanup behind us
+            getCleanupService().deleteLocations( cleanupList );
+        }
     }
 
     @Test
-    public void testGetLastLocationForTeam() {
-        fail( "Not yet implemented" );
+    public void testGetLastLocationForTeamWithNoLocations() throws Exception {
+        List<TeamDto> teams = client.getTeamByName( "alpha" );
+        TeamDto team = teams.get( 0 );
+        List<MemberDto> members = client.getMembersOfTeam( team );
+        
+        List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1000 );
+        assertNotNull( "List of locations should not be null", teamLocations );
+        assertTrue( "Should have returned 2 locations", teamLocations.size() == 2 );
+        
+        boolean allUnknown = true;
+        
+        for( LocationDto loc : teamLocations ) {
+            if( loc.getLattitude() != UNKNOWN_LOC || loc.getLongitude() != UNKNOWN_LOC ) {
+                allUnknown = false;
+                break;
+            }
+        }
+        assertTrue( "All locations should be UNKNOWN", allUnknown );
     }
 
     private MissionDto createTestMission() {

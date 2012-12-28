@@ -165,26 +165,41 @@ public class TeamLocatorServiceClient implements TeamLocatorService
     }
 
     /* (non-Javadoc)
-     * @see com.geocent.teamlocator.service.TeamLocatorService#addMemberLocation(java.lang.Integer, com.geocent.teamlocator.dto.LocationDto)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#addMemberLocation(com.geocent.teamlocator.dto.LocationDto)
      */
     @Override
-    public void addMemberLocation( Integer memberId, LocationDto location )
-            throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see com.geocent.teamlocator.service.TeamLocatorService#getLastLocationForTeam(com.geocent.teamlocator.dto.TeamDto, int)
-     */
-    @Override
-    public List<LocationDto> getLastLocationForTeam( TeamDto team, int maxRange ) throws EntityNotFoundException {
+    public LocationDto addMemberLocation( LocationDto location ) throws EntityNotFoundException {
         try {
-            return getService().getLastLocationForTeam( team, maxRange );
+            return getService().addMemberLocation( location );
         } catch( ServiceNotFoundException snfe ) {
             Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, snfe );
             return null;
         }
+
+    }
+
+    /* (non-Javadoc)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#getLastLocationForTeam(com.geocent.teamlocator.dto.MemberDto, int)
+     */
+    @Override
+    public List<LocationDto> getLastLocationForTeam( MemberDto member, int maxRange ) throws EntityNotFoundException {
+        try {
+            return getService().getLastLocationForTeam( member, maxRange );
+        } catch( ServiceNotFoundException snfe ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, snfe );
+            return null;
+        }
+    }
+
+    @Override
+    public List<MemberDto> getMembersOfTeam( TeamDto team ) {
+        List<MemberDto> result = new ArrayList<MemberDto>();
+        try {
+            result = getService().getMembersOfTeam( team );
+        } catch( ServiceNotFoundException snfe ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, snfe );
+        }
+        return result;
     }
 
     private Properties getInitProperties() {
@@ -219,18 +234,6 @@ public class TeamLocatorServiceClient implements TeamLocatorService
             }
         }
         return service;
-    }
-    /*
-     * This method is for TEST PURPOSES ONLY!! It must be removed
-     */
-    public static void main( String[] args ) {
-        TeamLocatorServiceClient client = new TeamLocatorServiceClient();
-        List<TeamDto> teams = client.getTeamByName( "Alpha" );
-        if( teams != null && !teams.isEmpty() ) {
-            System.out.println( "---->DEBUG: Found team: " + teams.get(0).getName() );
-        } else {
-            System.out.println( "---->DEBUG: Didn't get ANY teams back!!!" );
-        }
     }
 
 }

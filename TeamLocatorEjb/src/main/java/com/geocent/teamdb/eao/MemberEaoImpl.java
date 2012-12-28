@@ -46,11 +46,18 @@ public class MemberEaoImpl extends AbstractEao implements MemberEao {
         return null;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    public List<MemberDto> getMembers( TeamDto team )
-            throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<MemberDto> getMembers( TeamDto team )  throws EntityNotFoundException {
+        String queryString = "SELECT * FROM member WHERE team_id=?";
+        Query query = em.createNativeQuery( queryString, Member.class );
+        query.setParameter( 1,  team.getId() );
+        List<Member> members = (List<Member>) query.getResultList();
+        List<MemberDto> result = new ArrayList<MemberDto>();
+        for( Member member : members ) {
+            result.add( converter.fromEntity( member ) );
+        }
+        return result;
     }
 
     @SuppressWarnings( "unchecked" )

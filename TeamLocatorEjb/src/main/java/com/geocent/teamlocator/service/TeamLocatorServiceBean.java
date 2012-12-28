@@ -1,5 +1,6 @@
 package com.geocent.teamlocator.service;
 
+import com.geocent.teamdb.eao.LocationEao;
 import com.geocent.teamdb.eao.MemberEao;
 import com.geocent.teamdb.eao.MissionEao;
 import com.geocent.teamdb.eao.TeamEao;
@@ -12,6 +13,8 @@ import com.geocent.teamlocator.exception.InvalidMissionException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -24,13 +27,12 @@ import javax.jws.WebService;
 @LocalBean
 @WebService
 public class TeamLocatorServiceBean implements TeamLocatorService {
-    
-    @EJB 
-    protected MissionEao missionEao; 
-    @EJB
-    protected TeamEao teamEao;
-    @EJB
-    protected MemberEao memberEao;
+
+    public static final double UNKNOWN_LOC = -1.0;
+    @EJB protected MissionEao missionEao; 
+    @EJB protected TeamEao teamEao;
+    @EJB protected MemberEao memberEao;
+    @EJB protected LocationEao locationEao;
 
     /**
      * Default constructor. 
@@ -69,10 +71,12 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     }
 
 	/**
-     * @see TeamLocatorService#addMemberLocation(Integer, LocationDto)
+     * @return 
+	 * @see TeamLocatorService#addMemberLocation(LocationDto)
      */
-    public void addMemberLocation(Integer memberId, LocationDto location) {
-        // TODO Auto-generated method stub
+    public LocationDto addMemberLocation( LocationDto location ) {
+        System.out.println( "---->TRACE: TeamLocatorService.addMemberLocation" );
+        return locationEao.addLocation( location );
     }
 
 	/**
@@ -102,11 +106,46 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     }
 
 	/**
-     * @see TeamLocatorService#getLastLocationForTeam(TeamDto, int)
+     * @see TeamLocatorService#getLastLocationForTeam(MemberDto, int)
      */
-    public List<LocationDto> getLastLocationForTeam(TeamDto team, int maxRange) {
-        List<LocationDto> list = new ArrayList<LocationDto>();
-        return list;
+    public List<LocationDto> getLastLocationForTeam(MemberDto member, int maxRange) {
+        List<LocationDto> workList = new ArrayList<LocationDto>();
+        MissionDto curMission = null;
+        List<MissionDto> missions = this.getCurrentMission( member );
+        if( missions == null || missions.isEmpty() ) {
+            Logger.getLogger( TeamLocatorServiceBean.class.getName() ).severe( "No current mission found for Member Id=" + member.getId() );
+            return workList;
+        }
+        curMission = missions.get( 0 );
+        
+        List<MemberDto> teamMembers = getMembersOfTeam( member.getTeam() );
+        // first step is to get last location of each team member
+        LocationDto memberLoc = null;
+        for( MemberDto teamMember : teamMembers ) {
+            LocationDto loc = locationEao.getLastLocation( teamMember, curMission );
+            if( loc == null ) {
+                loc = createUnknownLocation( teamMember, curMission );
+            }
+            // Skip the requesting member
+            if( teamMember.getId().equals( member.getId() ) ) {
+                memberLoc = loc;
+                continue;
+            }
+            workList.add( loc );
+        }
+        
+        // Now filter the list based on max range
+        List<LocationDto> result = new ArrayList<LocationDto>();
+        for( LocationDto loc : workList ) {
+            double range = distanceBetweenPoints( memberLoc.getLattitude(), memberLoc.getLongitude(), 
+                                                  loc.getLattitude(), loc.getLongitude() );
+            if( range <= maxRange ) {
+                loc.setRange( range );
+                result.add( loc );
+            }
+        }
+        
+        return result;
     }
 
     @Override
@@ -141,4 +180,44 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
         return result;
     }
 
+    private LocationDto createUnknownLocation( MemberDto teamMember, MissionDto curMission ) {
+        // If no location was found for the the team member, then create an UNKNOWN loc object
+        LocationDto loc = new LocationDto();
+        loc.setLattitude( UNKNOWN_LOC );
+        loc.setLongitude( UNKNOWN_LOC );
+        loc.setMember( teamMember );
+        loc.setMission( curMission );
+        loc.setTeam( teamMember.getTeam() );
+        
+        return loc;
+    }
+
+    @Override
+    public List<MemberDto> getMembersOfTeam( TeamDto team ) {
+        List<MemberDto> teamMembers = new ArrayList<MemberDto>();
+        try {
+            teamMembers = memberEao.getMembers( team );
+        }catch( EntityNotFoundException enfe ) {
+            Logger.getLogger( TeamLocatorServiceBean.class.getName() ).severe( "No team found for Team Id=" + team.getId() );
+        }
+        return teamMembers;
+    }
+
+    private long distanceBetweenPoints( double lat1, double lng1, double lat2, double lng2) {
+        int radius = 6371; // Radius of the earth in KM
+        double latDeg = degToRad( lat2-lat1 );
+        double lngDeg = degToRad( lng2-lng1 );
+        double a = Math.sin( latDeg/2 ) * Math.sin( latDeg/2 ) + 
+                   Math.cos( degToRad(lat1) ) * Math.cos( degToRad(lat2) ) * Math.sin( lngDeg/2 ) * Math.sin( lngDeg/2 );
+        double c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a) );
+        double distance = radius * c;
+        
+        // Return the range in meters
+        return Math.round( distance*1000 );
+        
+    }
+    
+    private double degToRad( double degrees ) {
+        return degrees * (Math.PI / 180);
+    }
 }
