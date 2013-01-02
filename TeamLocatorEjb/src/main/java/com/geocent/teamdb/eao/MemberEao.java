@@ -24,7 +24,7 @@ public interface MemberEao extends Eao
      * @param key
      * @return Member
      */
-    public MemberDto getMember( int key );
+    public MemberDto getMember( int key ) throws EntityNotFoundException;
     
     /**
      * Get list of all members

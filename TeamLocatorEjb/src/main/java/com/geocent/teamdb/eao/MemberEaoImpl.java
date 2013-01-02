@@ -29,9 +29,8 @@ public class MemberEaoImpl extends AbstractEao implements MemberEao {
     }
 
     @Override
-    public MemberDto getMember( int key ) {
-        // TODO Auto-generated method stub
-        return null;
+    public MemberDto getMember( int key ) throws EntityNotFoundException {
+        return converter.fromEntity(  this.get( Member.class, key ) );
     }
 
     @Override

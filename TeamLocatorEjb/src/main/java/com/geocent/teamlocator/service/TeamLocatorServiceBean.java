@@ -105,6 +105,16 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
         return memberEao.getMembers( lastName, middleName, firstName );
     }
 
+    /**
+     * @see TeamLocatorService#getLastLocationForTeam(Integer, int)
+     */
+    public List<LocationDto> getLastLocationForTeam(Integer memberId, int maxRange) throws EntityNotFoundException {
+        MemberDto member = memberEao.getMember( memberId );
+        
+        // After retrieving the Member, use the existing operation to get the location list
+        return getLastLocationForTeam( member, maxRange );
+    }
+    
 	/**
      * @see TeamLocatorService#getLastLocationForTeam(MemberDto, int)
      */

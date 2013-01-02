@@ -74,7 +74,7 @@ public interface TeamLocatorService
      * @throws EntityNotFoundException if the input Team is not found
      */
     public MemberDto addMember( MemberDto member, TeamDto team ) throws EntityNotFoundException;
-
+    
     /**
      * Get the Member(s) matching the input criteria
      * @param lastName
@@ -121,6 +121,16 @@ public interface TeamLocatorService
      * @throws EntityNotFoundException if the Team is not found
      */
     public List<LocationDto> getLastLocationForTeam( MemberDto member, int maxRange ) throws EntityNotFoundException;
+
+    /**
+     * Returns a List of Locations for members of the input Team that are within the input range. The list will
+     * exclude the passed member and return the last location for all other members of the team based on the current mission.
+     * @param memberId - the Id of the member making the request
+     * @param maxRange - in meters
+     * @return
+     * @throws EntityNotFoundException if the Member is not found
+     */
+    public List<LocationDto> getLastLocationForTeam( Integer memberId, int maxRange ) throws EntityNotFoundException;
 
     /**
      * Get all members of the passed team

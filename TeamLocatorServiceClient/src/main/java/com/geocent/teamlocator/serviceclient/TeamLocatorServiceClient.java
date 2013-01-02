@@ -179,6 +179,19 @@ public class TeamLocatorServiceClient implements TeamLocatorService
     }
 
     /* (non-Javadoc)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#getLastLocationForTeam(Integer, int)
+     */
+    @Override
+    public List<LocationDto> getLastLocationForTeam( Integer memberId, int maxRange ) throws EntityNotFoundException {
+        try {
+            return getService().getLastLocationForTeam( memberId, maxRange );
+        } catch( ServiceNotFoundException snfe ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, snfe );
+            return null;
+        }
+    }
+
+    /* (non-Javadoc)
      * @see com.geocent.teamlocator.service.TeamLocatorService#getLastLocationForTeam(com.geocent.teamlocator.dto.MemberDto, int)
      */
     @Override
