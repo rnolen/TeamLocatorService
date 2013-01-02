@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="MISSION_TEAMS")
-public class MissionTeam extends com.geocent.util.jpa.Entity implements Serializable {
+public class MissionTeam extends com.geocent.teamdb.entity.AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -10,7 +10,7 @@ import java.util.List;
  * 
  */
 @Entity
-public class Team extends com.geocent.util.jpa.Entity implements Serializable {
+public class Team extends com.geocent.teamdb.entity.AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

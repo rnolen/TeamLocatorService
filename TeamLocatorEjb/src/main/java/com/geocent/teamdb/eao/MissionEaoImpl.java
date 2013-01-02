@@ -3,7 +3,6 @@ package com.geocent.teamdb.eao;
 import com.geocent.teamdb.entity.Mission;
 import com.geocent.teamdb.entity.MissionTeam;
 import com.geocent.teamdb.entity.Team;
-import com.geocent.teamdb.util.Converter;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
@@ -28,7 +27,6 @@ import javax.persistence.Query;
 @LocalBean
 public class MissionEaoImpl extends AbstractEao implements MissionEao {
 
-    private Converter converter;
     /**
      * Default constructor. 
      */

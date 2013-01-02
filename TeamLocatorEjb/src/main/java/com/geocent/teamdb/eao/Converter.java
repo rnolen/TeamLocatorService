@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.geocent.teamdb.util;
+package com.geocent.teamdb.eao;
 
 import com.geocent.teamdb.entity.Location;
 import com.geocent.teamdb.entity.Member;

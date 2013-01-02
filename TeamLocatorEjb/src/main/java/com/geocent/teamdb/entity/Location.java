@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  */
 @Entity
-public class Location extends com.geocent.util.jpa.Entity implements Serializable {
+public class Location extends com.geocent.teamdb.entity.AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

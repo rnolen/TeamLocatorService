@@ -1,4 +1,4 @@
-package com.geocent.teamlocator.service;
+package com.geocent.teamlocator.service.ejb;
 
 import java.util.List;
 
@@ -6,15 +6,16 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import com.geocent.teamdb.eao.Converter;
 import com.geocent.teamdb.eao.IntegrationCleanupEao;
 import com.geocent.teamdb.eao.MissionEao;
 import com.geocent.teamdb.eao.TeamEao;
-import com.geocent.teamdb.util.Converter;
 import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
+import com.geocent.teamlocator.service.IntegrationTestCleanup;
 
 /**
  * Session Bean implementation class IntegrationTestCleanupBean

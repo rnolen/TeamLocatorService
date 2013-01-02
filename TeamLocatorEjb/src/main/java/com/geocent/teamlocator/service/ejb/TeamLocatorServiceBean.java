@@ -1,4 +1,4 @@
-package com.geocent.teamlocator.service;
+package com.geocent.teamlocator.service.ejb;
 
 import com.geocent.teamdb.eao.LocationEao;
 import com.geocent.teamdb.eao.MemberEao;
@@ -10,6 +10,7 @@ import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
+import com.geocent.teamlocator.service.TeamLocatorService;
 
 import java.util.ArrayList;
 import java.util.List;

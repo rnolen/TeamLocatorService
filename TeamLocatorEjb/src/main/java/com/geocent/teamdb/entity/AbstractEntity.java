@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.geocent.util.jpa;
+package com.geocent.teamdb.entity;
 
 /**
  * @author rnolen
  *
  */
-public abstract class Entity {
+public abstract class AbstractEntity {
 	
 	public static boolean isId( Integer id ) {
 		return( id != null && id > 0);
