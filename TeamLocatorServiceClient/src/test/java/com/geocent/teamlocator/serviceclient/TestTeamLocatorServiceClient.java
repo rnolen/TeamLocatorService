@@ -343,7 +343,8 @@ public class TestTeamLocatorServiceClient
             try {
                 InitialContext ctx = new InitialContext( props );
                 testCleanup = (IntegrationTestCleanup) 
-                        ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
+                    ctx.lookup( "java:global/TeamLocatorEar-1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
+//                    ctx.lookup( "java:global/TeamLocatorEar/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
 //                    ctx.lookup( "java:global/com.geocent.teamlocator_TeamLocatorEar_ear_1.0-SNAPSHOT/TeamLocatorService-1.0-SNAPSHOT/IntegrationTestCleanupBean!com.geocent.teamlocator.service.IntegrationTestCleanup" );
             } catch( NamingException ex ) {
                 Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
