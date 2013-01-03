@@ -71,6 +71,12 @@
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+        	<groupId>com.geocent.teamlocator</groupId>
+        	<artifactId>TeamDb</artifactId>
+        	<version>1.0-SNAPSHOT</version>
+        	<type>ejb</type>
+        </dependency>
     </dependencies>
 
     <build>

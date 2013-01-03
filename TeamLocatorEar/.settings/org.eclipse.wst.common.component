@@ -21,6 +21,9 @@
         <dependent-module archiveName="TeamLocatorCommon-1.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/TeamLocatorCommon/TeamLocatorCommon">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="TeamDb-1.0-SNAPSHOT.jar" deploy-path="/" handle="module:/resource/TeamDb/TeamDb">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="TeamLocatorWeb-1.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/TeamLocatorWeb/TeamLocatorWeb">
             <dependency-type>uses</dependency-type>
         </dependent-module>
