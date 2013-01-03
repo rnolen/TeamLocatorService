@@ -8,6 +8,7 @@
   <name>TeamLocator</name>
   <modules>
     <module>TeamLocatorCommon</module>
+    <module>TeamDb</module>
     <module>TeamLocatorEar</module>
     <module>TeamLocatorWeb</module>
     <module>TeamLocatorEjb</module>
