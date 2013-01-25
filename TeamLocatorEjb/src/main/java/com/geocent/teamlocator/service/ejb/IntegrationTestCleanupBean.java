@@ -22,7 +22,7 @@ import com.geocent.teamlocator.service.IntegrationTestCleanup;
  * 
  * This class is intended ONLY for cleanup following unit/integration tests!!!!!
  */
-@Stateless
+@Stateless(name = "IntegrationTestCleanupBean", mappedName = "ejb/IntegrationTestCleanupBean")
 @LocalBean
 public class IntegrationTestCleanupBean implements IntegrationTestCleanup {
     

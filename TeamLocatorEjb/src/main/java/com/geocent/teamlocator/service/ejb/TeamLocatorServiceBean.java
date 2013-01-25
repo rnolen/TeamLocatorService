@@ -24,7 +24,7 @@ import javax.jws.WebService;
 /**
  * Session Bean implementation class TeamLocatorServiceBean
  */
-@Stateless
+@Stateless(name = "TeamLocatorServiceBean", mappedName = "ejb/TeamLocatorServiceBean")
 @LocalBean
 @WebService
 public class TeamLocatorServiceBean implements TeamLocatorService {

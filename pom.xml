@@ -12,6 +12,5 @@
     <module>TeamLocatorEar</module>
     <module>TeamLocatorWeb</module>
     <module>TeamLocatorEjb</module>
-    <module>TeamLocatorServiceClient</module>
   </modules>
 </project>
