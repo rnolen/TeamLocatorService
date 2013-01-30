@@ -263,11 +263,11 @@ public class TestTeamLocatorServiceClient
             
             List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1000 );
             assertNotNull( "List of locations should not be null", teamLocations );
-            assertTrue( "Should not have returned any locations", teamLocations.size() == 0 );
+            assertTrue( "Should have returned only one location for the mission objective", teamLocations.size() == 1 );
             
             // Now widen the range and try again
             teamLocations = client.getLastLocationForTeam( members.get( 0 ), 1500 );
-            assertTrue( "Should have gotten 2 locations this time", teamLocations.size() == 2 );
+            assertTrue( "Should have gotten 3 locations this time", teamLocations.size() == 3 );
 
         } finally {
             // Now cleanup behind us
@@ -283,11 +283,16 @@ public class TestTeamLocatorServiceClient
         
         List<LocationDto> teamLocations = client.getLastLocationForTeam( members.get( 0 ), 10 );
         assertNotNull( "List of locations should not be null", teamLocations );
-        assertEquals( "Should have returned 3 locations", 3, teamLocations.size() );
+        assertEquals( "Should have returned 4 locations", 4, teamLocations.size() );
         
         boolean allUnknown = true;
         
+        int i = 0;
         for( LocationDto loc : teamLocations ) {
+            // First location will be the objective location rather than for a team member
+            if( i++ == 0 ) {
+                continue;
+            }
             if( loc.getLattitude() != UNKNOWN_LOC || loc.getLongitude() != UNKNOWN_LOC ) {
                 allUnknown = false;
                 break;

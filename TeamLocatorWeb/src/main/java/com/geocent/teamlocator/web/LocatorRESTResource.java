@@ -103,7 +103,12 @@ public class LocatorRESTResource
             locationMix.setLng( location.getLongitude() );
             locationMix.setElevation( location.getElevation() );
             locationMix.setDistance( location.getRange() );
-            locationMix.setTitle( location.getMember().getLastName() );
+            // The first item in the list should be the objective
+            if( i == 0 ) {
+                locationMix.setTitle( "Objective: " + location.getMission().getObjective().getDescription() );
+            } else {
+                locationMix.setTitle( location.getMember().getLastName() );
+            }
             locationMixArray[i++] = locationMix;
         }
         return locationsMix;

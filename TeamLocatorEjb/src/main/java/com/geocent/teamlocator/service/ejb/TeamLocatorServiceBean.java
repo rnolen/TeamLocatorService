@@ -7,6 +7,7 @@ import com.geocent.teamdb.eao.TeamEao;
 import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.MissionDto;
+import com.geocent.teamlocator.dto.ObjectiveDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.exception.InvalidMissionException;
@@ -129,8 +130,11 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
         }
         curMission = missions.get( 0 );
         
+        // first step is to create a location object for the Mission Objective
+        LocationDto objectiveLoc = getObjectiveLocation( curMission );
+        
         List<MemberDto> teamMembers = getMembersOfTeam( member.getTeam() );
-        // first step is to get last location of each team member
+        // next step is to get last location of each team member
         LocationDto memberLoc = null;
         for( MemberDto teamMember : teamMembers ) {
             LocationDto loc = locationEao.getLastLocation( teamMember, curMission );
@@ -144,12 +148,20 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
             }
             workList.add( loc );
         }
+
+        // Add the objective location to the result list - regardless of the range. It should always be the FIRST item
+        // in the list.
+        List<LocationDto> result = new ArrayList<LocationDto>();
+        double range = distanceBetweenPoints( memberLoc.getLattitude(), memberLoc.getLongitude(), 
+                                              objectiveLoc.getLattitude(), objectiveLoc.getLongitude() );
+        objectiveLoc.setRange( range );
+        result.add( objectiveLoc );
         
         // Now filter the list based on max range
-        List<LocationDto> result = new ArrayList<LocationDto>();
         for( LocationDto loc : workList ) {
-            double range = distanceBetweenPoints( memberLoc.getLattitude(), memberLoc.getLongitude(), 
-                                                  loc.getLattitude(), loc.getLongitude() );
+            
+            range = distanceBetweenPoints( memberLoc.getLattitude(), memberLoc.getLongitude(), 
+                                           loc.getLattitude(), loc.getLongitude() );
             if( range <= maxRange ) {
                 loc.setRange( range );
                 result.add( loc );
@@ -157,6 +169,21 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
         }
         
         return result;
+    }
+
+    /** 
+     * Create a LocationDto object for the mission objective with just the location info
+     * @param curMission
+     * @return
+     */
+    private LocationDto getObjectiveLocation( MissionDto curMission ) {
+        LocationDto loc = new LocationDto();
+        ObjectiveDto objective = curMission.getObjective();
+        loc.setId( objective.getId() );
+        loc.setLattitude( objective.getLatitude() );
+        loc.setLongitude( objective.getLongitude() );
+        loc.setMission( curMission );
+        return loc;
     }
 
     @Override
