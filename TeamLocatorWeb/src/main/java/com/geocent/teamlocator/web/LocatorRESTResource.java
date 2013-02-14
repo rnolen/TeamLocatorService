@@ -2,12 +2,15 @@ package com.geocent.teamlocator.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,7 +18,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.geocent.teamlocator.dto.LocationDto;
+import com.geocent.teamlocator.dto.MemberDto;
 import com.geocent.teamlocator.dto.TeamDto;
+import com.geocent.teamlocator.enums.MemberRank;
+import com.geocent.teamlocator.enums.TeamRole;
 import com.geocent.teamlocator.exception.EntityNotFoundException;
 import com.geocent.teamlocator.mixare.model.LocationMix;
 import com.geocent.teamlocator.mixare.model.LocationsMix;
@@ -53,6 +59,39 @@ public class LocatorRESTResource
             locationsMix.setStatus( "Fail" );
         }
         return locationsMix;
+    }
+    
+    @POST
+    @Path("addTeamMember")
+    @Produces( MediaType.APPLICATION_JSON )
+    public MemberDto addTeamMember( @FormParam("teamName") String teamName, @FormParam("firstName") String firstName,
+                               @FormParam("middleName") String middleName, @FormParam("lastName") String lastName,
+                               @FormParam("rank") String rank, @FormParam( "role") String role ) throws EntityNotFoundException {
+        System.out.println( "---->DEBUG: addTeamMember: teamName=" + teamName + ", memberName=" + lastName + ", " + firstName + " " + middleName + 
+                            ", " + rank + ", " + role );
+        
+        // Get the team by name
+        List<TeamDto> teams = service.getTeamByName( teamName );
+        TeamDto team = teams.get( 0 );
+        
+        // Let's see if this member already exists
+        List<MemberDto> members = service.getMembers( lastName, middleName, firstName );
+        MemberDto member = new MemberDto();
+        if( !members.isEmpty() ) {
+            member = members.get( 0 );
+        }
+        member.setFirstName( firstName );
+        member.setLastName( lastName );
+        member.setMiddleName( middleName );
+        member.setRank( MemberRank.valueOf( rank.toUpperCase() ) );
+        if( role != null && !role.isEmpty() ) {
+            member.setRole( TeamRole.valueOf( role.toUpperCase() ) );
+        } else {
+            member.setRole( TeamRole.MEMBER );
+        }
+        member.setTeam( team );
+        service.addMember( member, team );
+        return member;
     }
 
     /**
