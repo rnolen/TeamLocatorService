@@ -64,7 +64,7 @@ public class TestTeamLocatorServiceClient
 
     @Test
     public void testGetMissionByDescription() throws Exception {
-        String desc  = "RECON LIC";
+        String desc  = "RECON PSA";
         
         List<MissionDto> missions = client.getMissionByDescription( desc );
 
@@ -99,6 +99,12 @@ public class TestTeamLocatorServiceClient
         // Now clean up
         getCleanupService().deleteTeam( team );
         getCleanupService().deleteMission( mission );
+    }
+    
+    @Test
+    public void getGetAllTeams() {
+        List<TeamDto> result = client.getAllTeams();
+        assertEquals( "Should have returned 3 teams", 3, result.size() );
     }
 
     @Test
@@ -177,6 +183,19 @@ public class TestTeamLocatorServiceClient
         client.addMember( memberDto, teamDto );
     }
 
+    @Test
+    public void testGetMemberByIdWithValidId() throws Exception {
+        MemberDto member = client.getMemberById( 1 );
+        assertNotNull( "returned Member should not be null", member );
+        assertTrue( "Member last name should be PATTERSON", "PATTERSON".equalsIgnoreCase(member.getLastName()) ); 
+    }
+    
+    @Test(expected=EntityNotFoundException.class)
+    public void testGetMemberByIdWithBadId() throws Exception {
+        MemberDto member = client.getMemberById( -1 );
+        fail( "Test should have thrown an exception" );
+    }
+    
     @Test
     public void testGetMembersByName() {
         List<MemberDto> members = client.getMembers( "mccoy", null, null );
