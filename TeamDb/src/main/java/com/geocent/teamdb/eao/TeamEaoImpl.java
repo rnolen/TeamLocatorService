@@ -37,7 +37,14 @@ public class TeamEaoImpl extends AbstractEao implements TeamEao {
 
     @Override
     public List<TeamDto> getTeams() {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        List<TeamDto> result = new ArrayList<TeamDto>();
+        List<Team> resultList = null;
+        Query query = em.createQuery( "select t from Team t" );
+        resultList = (List<Team>) query.getResultList();
+        for( Team team : resultList ) {
+            result.add( converter.fromEntity(team) );
+        }
+        return result;
     }
 
     @SuppressWarnings( "unchecked" )
