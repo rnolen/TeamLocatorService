@@ -1,6 +1,7 @@
 package com.geocent.teamlocator.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.geocent.teamlocator.dto.LocationDto;
 import com.geocent.teamlocator.dto.MemberDto;
+import com.geocent.teamlocator.dto.MissionDto;
 import com.geocent.teamlocator.dto.TeamDto;
 import com.geocent.teamlocator.enums.MemberRank;
 import com.geocent.teamlocator.enums.TeamRole;
@@ -40,6 +42,14 @@ public class LocatorRESTResource
     public List<TeamDto> getTeamByName( @QueryParam(value="name") String name ) {
         System.out.println( "---->DEBUG: LocatorRESTResource.getTeamByName: name=" + name );
         return service.getTeamByName( name );
+    }
+    
+    @GET
+    @Path( "getAllTeams" )
+    @Produces( {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML} )
+    public List<TeamDto> getAllTeams() {
+        System.out.println( "---->DEBUG: LocatorRESTResource.getAllTeams" );
+        return service.getAllTeams();
     }
     
     @GET
@@ -93,6 +103,31 @@ public class LocatorRESTResource
         service.addMember( member, team );
         return member;
     }
+    
+    @POST
+    @Path("addLocationForMember")
+    @Produces( MediaType.APPLICATION_JSON )
+    public LocationDto addLocationForMember( @FormParam("memberId") String memberId, @FormParam("lattitude") String lattitude,
+                                             @FormParam("longitude") String longitude ) throws EntityNotFoundException {
+        // find the member first
+        MemberDto member = service.getMemberById( Integer.valueOf(memberId) );
+        // get the currently active mission for the team
+        MissionDto mission = service.getCurrentMission( member ).get( 0 );
+        
+        // Now create a location for the member
+        LocationDto location = new LocationDto();
+        location.setDateStamp( new Date() );
+        location.setMember( member );
+        location.setLattitude( Double.valueOf( lattitude ) );
+        location.setLongitude( Double.valueOf( longitude ) );
+        location.setTeam( member.getTeam() );
+        location.setMission( mission );
+        
+        // Add the location - the returned value will have the location Id populated
+        location = service.addMemberLocation( location );
+        
+        return location;
+    }
 
     /**
      * Creates a JSON string using the passed list of LocationDto
@@ -144,11 +179,12 @@ public class LocatorRESTResource
             locationMix.setDistance( location.getRange() );
             // The first item in the list should be the objective
             if( i == 0 ) {
-                locationMix.setTitle( "Objective: " + location.getMission().getObjective().getDescription() );
+                locationMix.setTitle( "Objective=" + location.getMission().getObjective().getDescription() );
             } else {
                 locationMix.setTitle( location.getMember().getLastName() );
             }
             locationMixArray[i++] = locationMix;
+            System.out.println( "---->DEBUG: location for: " + locationMix.getTitle() + ": lat=" + locationMix.getLat() + ", lng=" + locationMix.getLng() );
         }
         return locationsMix;
         
