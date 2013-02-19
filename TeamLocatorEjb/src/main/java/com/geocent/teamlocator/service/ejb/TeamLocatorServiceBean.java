@@ -63,6 +63,11 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
         return result;
     }
 
+    @Override
+    public List<TeamDto> getAllTeams() {
+        return teamEao.getTeams();
+    }
+    
 	/**
      * @see TeamLocatorService#getTeamByName(String)
      */
@@ -102,6 +107,12 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
 		return updatedMember;
     }
 
+    @Override
+    public MemberDto getMemberById( Integer id ) throws EntityNotFoundException {
+        MemberDto member = memberEao.getMember( id.intValue() );
+        return member;
+    }
+    
     @Override
     public List<MemberDto> getMembers( String lastName, String middleName, String firstName ) {
         return memberEao.getMembers( lastName, middleName, firstName );
@@ -258,4 +269,5 @@ public class TeamLocatorServiceBean implements TeamLocatorService {
     private double degToRad( double degrees ) {
         return degrees * (Math.PI / 180);
     }
+
 }

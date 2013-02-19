@@ -49,6 +49,12 @@ public interface TeamLocatorService
     public TeamDto addTeam( TeamDto team, MissionDto mission ) throws EntityNotFoundException;
     
     /**
+     * Get all of the teams in the database
+     * @return List of TeamDto objects
+     */
+    public List<TeamDto> getAllTeams();
+    
+    /**
      * Retrieve Team(s) based on the input name. We only really expect one team per name, but there's
      * no unique constraint on the name so we're prepared to get more than one
      * @param name
@@ -83,6 +89,14 @@ public interface TeamLocatorService
      * @return
      */
     public List<MemberDto> getMembers( String lastName, String middleName, String firstName );
+    
+    /**
+     * Retrieve the specific member
+     * @param id
+     * @return MemberDto with the found member
+     * @throws EntityNotFoundException if member is not found
+     */
+    public MemberDto getMemberById( Integer id ) throws EntityNotFoundException;
     
     /**
      * Reassigns the input Member from their existing team to the input Team.

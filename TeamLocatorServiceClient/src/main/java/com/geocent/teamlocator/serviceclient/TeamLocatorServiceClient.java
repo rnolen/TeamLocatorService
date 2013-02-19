@@ -94,6 +94,16 @@ public class TeamLocatorServiceClient implements TeamLocatorService
         }
         return result;
     }
+    @Override
+    public List<TeamDto> getAllTeams() {
+        List<TeamDto> result = new ArrayList<TeamDto>();
+        try {
+            result = getService().getAllTeams();
+        } catch( ServiceNotFoundException ex ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+        return result;
+    }
 
     @Override
     public List<TeamDto> getTeamByName( String name ) {
@@ -128,6 +138,20 @@ public class TeamLocatorServiceClient implements TeamLocatorService
         MemberDto result = null;
         try {
             result = getService().addMember( member, team );
+        } catch( ServiceNotFoundException e ) {
+            Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
+        }
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see com.geocent.teamlocator.service.TeamLocatorService#getMemberById(Integer id)
+     */
+    @Override
+    public MemberDto getMemberById( Integer id ) throws EntityNotFoundException {
+        MemberDto result = null;
+        try {
+            result = getService().getMemberById( id );
         } catch( ServiceNotFoundException e ) {
             Logger.getLogger( TeamLocatorServiceClient.class.getName() ).log( Level.SEVERE, null, e );
         }
